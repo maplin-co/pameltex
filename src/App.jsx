@@ -7,6 +7,7 @@ import CorporateServices from './pages/CorporateServices';
 import OurCompany from './pages/OurCompany';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
+import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/our-company" element={<OurCompany />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/faq" element={<FAQ />} />
+                    <Route path="/login" element={<Login />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>

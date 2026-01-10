@@ -17,8 +17,8 @@ const Header = () => {
                     <Link to="/corporate-services" className="nav-link" onClick={() => setIsMenuOpen(false)}>Corporate Services</Link>
                     <Link to="/faq" className="nav-link" onClick={() => setIsMenuOpen(false)}>FAQ</Link>
                     <Link to="/contact" className="nav-link" onClick={() => setIsMenuOpen(false)}>Contact</Link>
-                    <a href="#" className="btn btn-outline" onClick={() => setIsMenuOpen(false)}>Log in</a>
-                    <Link to="/contact" className="btn btn-solid" onClick={() => setIsMenuOpen(false)}>Book Session</Link>
+                    <Link to="/login" className="btn btn-outline" onClick={() => setIsMenuOpen(false)}>Log in</Link>
+                    <Link to="/contact" className="btn btn-solid" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
                 </nav>
                 <button className="menu-toggle" aria-label="Menu" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                     <span></span>
