@@ -1,0 +1,6 @@
+{
+    "buildCommand": "echo 'No build necessary for Vanilla SPA'",
+    "outputDirectory": ".",
+    "ignoreCommand": "git check-ignore -v .",
+    "framework": "vite"
+}
