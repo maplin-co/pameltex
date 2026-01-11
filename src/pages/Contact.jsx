@@ -48,7 +48,7 @@ const Contact = () => {
 
                             <div style={{ background: '#fff', padding: '25px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #eee' }}>
                                 <h3 style={{ fontSize: '18px', marginBottom: '10px', color: 'var(--brand-green)' }}>Visit Us</h3>
-                                <p>Plot 59716/36c Block 7<br />Gaborone, Botswana</p>
+                                <p>Plot 18680 Khuhurutse St, Phase 2<br />Gaborone, Botswana</p>
                             </div>
 
                             <div style={{ background: '#fff', padding: '25px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #eee' }}>
@@ -58,7 +58,7 @@ const Contact = () => {
 
                             <div style={{ background: '#fff', padding: '25px', borderRadius: '8px', border: '1px solid #eee' }}>
                                 <h3 style={{ fontSize: '18px', marginBottom: '10px', color: 'var(--brand-green)' }}>Email</h3>
-                                <p>info@pameltex.com<br />pameltex@gmail.com</p>
+                                <p>info@pameltex.com</p>
                             </div>
                         </div>
 
