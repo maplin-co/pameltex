@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom';
+import clientLetlole from '../assets/client-letlole.png';
+import clientLetshego from '../assets/client-letshego.png';
+import clientUnitrans from '../assets/client-unitrans.png';
 
 const Home = () => {
     return (
         <>
+
+
             <section className="hero">
                 <div className="container hero-container">
                     <h1 className="hero-title">You deserve to be happy.</h1>
@@ -103,6 +108,27 @@ const Home = () => {
                             <div className="col-brand">Affordable</div>
                             <div className="col-other">Expensive</div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* NEW: Clients Section */}
+            <section className="clients-section">
+                <div className="container" style={{ textAlign: 'center', padding: '60px 0', borderTop: '1px solid #eee' }}>
+                    <h2 className="section-title" style={{ fontSize: '24px', opacity: 0.6, marginBottom: '40px' }}>Trusted by leading organizations</h2>
+                    <div className="clients-grid" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '60px', flexWrap: 'wrap' }}>
+                        <img src={clientLetlole} alt="Letlole La Rona" className="client-logo" style={{ height: '60px', opacity: 0.8, filter: 'grayscale(100%)', transition: 'all 0.3s' }}
+                            onMouseOver={e => e.currentTarget.style.filter = 'none'}
+                            onMouseOut={e => e.currentTarget.style.filter = 'grayscale(100%)'}
+                        />
+                        <img src={clientUnitrans} alt="Unitrans Botswana" className="client-logo" style={{ height: '50px', opacity: 0.8, filter: 'grayscale(100%)', transition: 'all 0.3s' }}
+                            onMouseOver={e => e.currentTarget.style.filter = 'none'}
+                            onMouseOut={e => e.currentTarget.style.filter = 'grayscale(100%)'}
+                        />
+                        <img src={clientLetshego} alt="Letshego" className="client-logo" style={{ height: '50px', opacity: 0.8, filter: 'grayscale(100%)', transition: 'all 0.3s' }}
+                            onMouseOver={e => e.currentTarget.style.filter = 'none'}
+                            onMouseOut={e => e.currentTarget.style.filter = 'grayscale(100%)'}
+                        />
                     </div>
                 </div>
             </section>
