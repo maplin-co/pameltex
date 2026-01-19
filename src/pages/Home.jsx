@@ -148,7 +148,7 @@ const Home = () => {
                         </div>
                         <div className="testimonial-card">
                             <p className="t-text">"The corporate wellness program introduced by Pameltex helped our team communicate better. Highly recommended for businesses."</p>
-                            <span className="t-author">- Tech Solutions Ltd.</span>
+                            <span className="t-author">- Letlole La Rona, CEO</span>
                         </div>
                     </div>
                 </div>
