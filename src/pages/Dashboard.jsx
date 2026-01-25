@@ -1,12 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('overview');
     const [mood, setMood] = useState(null);
+    const [userName, setUserName] = useState('Client');
+    const [sessionData, setSessionData] = useState(null);
+    const [assessments, setAssessments] = useState([]);
 
-    const resources = [
+    // Simulate loading user data and maintaining state
+    useEffect(() => {
+        // In a real app, fetch from API. Here, check localStorage or use default.
+        const storedName = localStorage.getItem('pameltex_user_name');
+        if (storedName) setUserName(storedName);
+
+        // Load mood history if any
+        const storedMoods = JSON.parse(localStorage.getItem('pameltex_moods') || '[]');
+        if (storedMoods.length > 0) {
+            // Maybe show last mood? For now just log it
+            console.log('User mood history:', storedMoods);
+        }
+
+        // Simulate session data - null means no session booked
+        const session = localStorage.getItem('pameltex_session');
+        if (session) {
+            setSessionData(JSON.parse(session));
+        }
+    }, []);
+
+    const handleMoodSelect = (index) => {
+        setMood(index);
+        // Save to local storage to simulate "real data collection"
+        const newMoodEntry = {
+            moodScore: index,
+            timestamp: new Date().toISOString()
+        };
+        const currentMoods = JSON.parse(localStorage.getItem('pameltex_moods') || '[]');
+        const updatedMoods = [newMoodEntry, ...currentMoods];
+        localStorage.setItem('pameltex_moods', JSON.stringify(updatedMoods));
+    };
+
+    const initialResources = [
         {
             id: 1,
             title: "Understanding Anxiety",
@@ -92,11 +127,11 @@ const Dashboard = () => {
             <main className="dash-content">
                 <header className="dash-header">
                     <div className="dash-welcome">
-                        <h1>Welcome back, Sarah</h1>
+                        <h1>Welcome back, {userName}</h1>
                         <p>Here's what's happening with your wellness journey today.</p>
                     </div>
                     <div className="dash-user-profile">
-                        <div className="avatar">SK</div>
+                        <div className="avatar">{userName.charAt(0)}</div>
                     </div>
                 </header>
 
@@ -113,7 +148,7 @@ const Dashboard = () => {
                                     <button
                                         key={index}
                                         className={`mood-btn ${mood === index ? 'selected' : ''}`}
-                                        onClick={() => setMood(index)}
+                                        onClick={() => handleMoodSelect(index)}
                                     >
                                         {emoji}
                                     </button>
@@ -121,7 +156,7 @@ const Dashboard = () => {
                             </div>
                             {mood !== null && (
                                 <div className="mood-response animate-fade-in">
-                                    <p>Thanks for sharing! We've logged this in your journal.</p>
+                                    <p>Thanks for checking in. We've saved your response.</p>
                                 </div>
                             )}
                         </div>
@@ -134,7 +169,7 @@ const Dashboard = () => {
                             <button className="view-all-btn" onClick={() => setActiveTab('resources')}>View All</button>
                         </div>
                         <div className="resources-grid">
-                            {resources.map(resource => (
+                            {initialResources.map(resource => (
                                 <div key={resource.id} className="resource-card" style={{ borderTopColor: resource.color }}>
                                     <div className="resource-icon" style={{ background: resource.color }}>
                                         {resource.type === 'Article' ? '📄' : resource.type === 'Audio' ? '🎧' : '💡'}
@@ -153,15 +188,24 @@ const Dashboard = () => {
                     {/* Upcoming Session */}
                     <section className="dash-section">
                         <div className="session-card">
-                            <div className="session-info">
-                                <h3>Next Session</h3>
-                                <p className="session-time">Tomorrow, 2:00 PM</p>
-                                <p className="session-doc">with Dr. Maphanyane</p>
-                            </div>
-                            <div className="session-action">
-                                <button className="btn btn-solid">Join Video Call</button>
-                                <button className="btn btn-outline">Reschedule</button>
-                            </div>
+                            {sessionData ? (
+                                <>
+                                    <div className="session-info">
+                                        <h3>Next Session</h3>
+                                        <p className="session-time">{sessionData.time}</p>
+                                        <p className="session-doc">with {sessionData.doctor}</p>
+                                    </div>
+                                    <div className="session-action">
+                                        <button className="btn btn-solid">Join Video Call</button>
+                                        <button className="btn btn-outline" style={{ borderColor: '#fff', color: '#fff' }}>Reschedule</button>
+                                    </div>
+                                </>
+                            ) : (
+                                <div style={{ width: '100%', textAlign: 'center' }}>
+                                    <h3 style={{ marginBottom: '15px' }}>No upcoming sessions</h3>
+                                    <Link to="/contact" className="btn btn-solid" style={{ background: '#fff', color: 'var(--brand-teal)', border: 'none' }}>Book a Session</Link>
+                                </div>
+                            )}
                         </div>
                     </section>
                 </div>
