@@ -1,4 +1,7 @@
 import profileImg from '../assets/profile-placeholder.png';
+import alpheausImg from '../assets/alpheaus.jpg';
+import thamuImg from '../assets/thamu.jpg';
+import carolineImg from '../assets/caroline.jpg';
 
 const OurCompany = () => {
     return (
@@ -47,7 +50,7 @@ const OurCompany = () => {
                     <div className="team-card"
                         style={{ background: 'white', maxWidth: '900px', margin: '0 auto 40px auto', display: 'flex', overflow: 'hidden', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', flexDirection: 'row', flexWrap: 'wrap' }}>
                         <div className="team-img" style={{ flex: 1, minWidth: '300px', background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <img src={profileImg} alt="Caroline Sithole" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={carolineImg} alt="Caroline Sithole" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </div>
                         <div className="team-info" style={{ padding: '40px', flex: 1.5, minWidth: '300px' }}>
                             <h3 style={{ fontSize: '28px', color: 'var(--brand-purple)', marginBottom: '5px' }}>Caroline Sithole
@@ -68,7 +71,7 @@ const OurCompany = () => {
                         <div className="team-card-vertical"
                             style={{ background: 'white', overflow: 'hidden', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column' }}>
                             <div className="team-img" style={{ height: '300px', background: '#e0f7fa', width: '100%' }}>
-                                <img src={profileImg} alt="Thamu Gordon Mthupa" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+                                <img src={thamuImg} alt="Thamu Gordon Mthupa" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
                             </div>
                             <div className="team-info" style={{ padding: '30px', flex: 1 }}>
                                 <h3 style={{ fontSize: '22px', color: 'var(--brand-purple)', marginBottom: '5px' }}>Thamu Gordon Mthupa</h3>
@@ -81,7 +84,7 @@ const OurCompany = () => {
                         <div className="team-card-vertical"
                             style={{ background: 'white', overflow: 'hidden', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column' }}>
                             <div className="team-img" style={{ height: '300px', background: '#f3e5f5', width: '100%' }}>
-                                <img src={profileImg} alt="Alpheaus Chiwaze" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+                                <img src={alpheausImg} alt="Alpheaus Chiwaze" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
                             </div>
                             <div className="team-info" style={{ padding: '30px', flex: 1 }}>
                                 <h3 style={{ fontSize: '22px', color: 'var(--brand-purple)', marginBottom: '5px' }}>Alpheaus Chiwaze</h3>
