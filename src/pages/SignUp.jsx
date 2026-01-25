@@ -30,11 +30,28 @@ const SignUp = () => {
 
         // Simulate API call and registration
         setTimeout(() => {
-            // Save user data to localStorage to simulate persistent session
+            // Save user to mock DB in localStorage
+            const newUser = {
+                name: formData.name,
+                email: formData.email,
+                password: formData.password
+            };
+
+            const existingUsers = JSON.parse(localStorage.getItem('pameltex_users_db') || '[]');
+            // Simple duplication check
+            if (existingUsers.some(u => u.email === formData.email)) {
+                alert("Email already registered!");
+                setIsLoading(false);
+                return;
+            }
+
+            existingUsers.push(newUser);
+            localStorage.setItem('pameltex_users_db', JSON.stringify(existingUsers));
+
+            // Auto-login after signup
+            localStorage.setItem('pameltex_auth', 'true');
             localStorage.setItem('pameltex_user_name', formData.name);
             localStorage.setItem('pameltex_user_email', formData.email);
-            // In a real app, you'd get a token here. We'll set a flag.
-            localStorage.setItem('pameltex_auth', 'true');
 
             setIsLoading(false);
             // Redirect to Dashboard

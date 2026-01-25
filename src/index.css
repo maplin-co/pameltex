@@ -132,6 +132,11 @@ a {
     color: var(--brand-purple);
 }
 
+.nav .btn {
+    padding: 6px 16px;
+    font-size: 13px;
+}
+
 .btn {
     padding: 8px 20px;
     border-radius: 50px;

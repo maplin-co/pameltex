@@ -9,13 +9,21 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Simulating login flow
-        localStorage.setItem('pameltex_auth', 'true');
-        // If no name is set (from signup), default to 'Client'
-        if (!localStorage.getItem('pameltex_user_name')) {
-            localStorage.setItem('pameltex_user_name', 'Client');
+
+        // Validation Logic
+        const users = JSON.parse(localStorage.getItem('pameltex_users_db') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (user) {
+            // Success
+            localStorage.setItem('pameltex_auth', 'true');
+            localStorage.setItem('pameltex_user_name', user.name);
+            localStorage.setItem('pameltex_user_email', user.email);
+            navigate('/dashboard');
+        } else {
+            // Failure
+            alert("Invalid email or password. Please try again or create an account.");
         }
-        navigate('/dashboard');
     };
 
     return (
