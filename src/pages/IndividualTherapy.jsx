@@ -1,6 +1,9 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import BookingModal from '../components/BookingModal';
 
 const IndividualTherapy = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <>
             <section className="hero page-hero" style={{ padding: '60px 0', background: 'var(--bg-dark)' }}>
@@ -63,25 +66,7 @@ const IndividualTherapy = () => {
                                         window.location.href = '/login';
                                         return;
                                     }
-
-                                    // Simulation of booking flow
-                                    const confirmBooking = confirm("Proceed to Google Calendar to schedule your session with Pameltex?\n\n(This will simulate a confirmed booking in your dashboard)");
-
-                                    if (confirmBooking) {
-                                        // 1. Open Google Calendar (Simulated link)
-                                        window.open('https://calendar.google.com/calendar/r/eventedit?add=pameltex@gmail.com', '_blank');
-
-                                        // 2. Save mock appointment to dashboard
-                                        const mockAppointment = {
-                                            doctor: "Caroline Sithole",
-                                            time: "Aug 12, 10:00 AM", // Static mock date for demo
-                                            type: "Individual Therapy"
-                                        };
-                                        localStorage.setItem('pameltex_appointment', JSON.stringify(mockAppointment));
-
-                                        // 3. Redirect to Dashboard
-                                        window.location.href = '/dashboard';
-                                    }
+                                    setIsModalOpen(true);
                                 }}
                                 className="btn btn-solid"
                                 style={{ padding: '15px 40px', fontSize: '18px', border: 'none' }}
@@ -89,6 +74,13 @@ const IndividualTherapy = () => {
                                 Schedule a Consultation
                             </button>
                         </div>
+
+                        <BookingModal
+                            isOpen={isModalOpen}
+                            onClose={() => setIsModalOpen(false)}
+                            serviceType="Individual Therapy"
+                            doctorName="Caroline Sithole"
+                        />
                     </div>
                 </div>
             </section>

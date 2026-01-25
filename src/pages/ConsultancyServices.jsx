@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import BookingModal from '../components/BookingModal';
 import bosswaLogo from '../assets/bosswa-logo.jpg';
 import letloleLogo from '../assets/client-letlole.png';
 import letshegoLogo from '../assets/client-letshego.png';
@@ -6,6 +7,7 @@ import unitransLogo from '../assets/client-unitrans.png';
 import thitmaLogo from '../assets/thitma-logo.jpg';
 
 const ConsultancyServices = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const services = [
         {
             title: "Business Advisory",
@@ -62,25 +64,18 @@ const ConsultancyServices = () => {
                                 window.location.href = '/login';
                                 return;
                             }
-
-                            const confirmBooking = confirm("Proceed to schedule an inquiry session?\n\n(This will simulate a confirmed booking)");
-
-                            if (confirmBooking) {
-                                window.open('https://calendar.google.com/calendar/r/eventedit?add=pameltex@gmail.com', '_blank');
-
-                                const mockAppointment = {
-                                    doctor: "Consultancy Team",
-                                    time: "TBD",
-                                    type: "Business Consultancy"
-                                };
-                                localStorage.setItem('pameltex_appointment', JSON.stringify(mockAppointment));
-
-                                window.location.href = '/dashboard';
-                            }
+                            setIsModalOpen(true);
                         }}
                         className="btn btn-solid" style={{ backgroundColor: '#fff', color: 'var(--brand-teal)', borderColor: '#fff', padding: '12px 30px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
                         Get in Touch
                     </button>
+
+                    <BookingModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        serviceType="Business Consultancy"
+                        doctorName="Consultancy Team"
+                    />
                 </div>
             </section>
 

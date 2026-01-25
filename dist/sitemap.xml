@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.pameltex.com/index.html</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.pameltex.com/contact.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.pameltex.com/our-company.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.pameltex.com/individual-therapy.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.pameltex.com/corporate-services.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.pameltex.com/faq.html</loc>
+    <priority>0.6</priority>
+  </url>
+</urlset>

@@ -316,8 +316,63 @@ const Dashboard = () => {
 
                 {activeTab === 'messages' && (
                     <div className="dash-container animate-fade-in">
-                        <div style={{ background: '#fff', padding: '40px', borderRadius: '12px', textAlign: 'center' }}>
-                            <h3>No new messages</h3>
+                        <div style={{ background: '#fff', padding: '40px', borderRadius: '12px' }}>
+                            <div style={{ marginBottom: '30px', textAlign: 'center' }}>
+                                <h2 style={{ color: 'var(--brand-purple)', marginBottom: '10px' }}>Secure Messaging</h2>
+                                <p style={{ color: '#666' }}>Communicate directly with your assigned counselor. All messages are encrypted and confidential.</p>
+                            </div>
+
+                            <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+                                <div style={{ marginBottom: '20px' }}>
+                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>To:</label>
+                                    <input
+                                        type="text"
+                                        value="assessments@pameltex.com"
+                                        readOnly
+                                        style={{ width: '100%', padding: '12px', background: '#f5f5f5', border: '1px solid #ddd', borderRadius: '6px', color: '#666' }}
+                                    />
+                                </div>
+
+                                <div style={{ marginBottom: '20px' }}>
+                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>Subject:</label>
+                                    <input
+                                        type="text"
+                                        id="msg-subject"
+                                        placeholder="e.g., Question about my session..."
+                                        style={{ width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '6px' }}
+                                    />
+                                </div>
+
+                                <div style={{ marginBottom: '20px' }}>
+                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>Message:</label>
+                                    <textarea
+                                        id="msg-body"
+                                        placeholder="Type your message here..."
+                                        style={{ width: '100%', minHeight: '150px', padding: '12px', border: '1px solid #ddd', borderRadius: '6px', resize: 'vertical', fontFamily: 'inherit' }}
+                                    ></textarea>
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        const subject = document.getElementById('msg-subject').value;
+                                        const body = document.getElementById('msg-body').value;
+
+                                        if (!subject || !body) {
+                                            alert("Please fill in both the subject and message fields.");
+                                            return;
+                                        }
+
+                                        window.open(`mailto:assessments@pameltex.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+                                    }}
+                                    className="btn btn-solid"
+                                    style={{ width: '100%', padding: '15px', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}
+                                >
+                                    <span>📩</span> Send Message
+                                </button>
+                                <p style={{ marginTop: '15px', fontSize: '13px', color: '#999', textAlign: 'center' }}>
+                                    * This will open your default email client to send the secure message.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 )}

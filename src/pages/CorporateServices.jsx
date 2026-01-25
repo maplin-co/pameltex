@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import BookingModal from '../components/BookingModal';
 
 const CorporateServices = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <>
             <section className="business-hero">
@@ -69,25 +73,18 @@ const CorporateServices = () => {
                                 window.location.href = '/login';
                                 return;
                             }
-
-                            const confirmBooking = confirm("Proceed to schedule a corporate consultation?\n\n(This will simulate a confirmed booking)");
-
-                            if (confirmBooking) {
-                                window.open('https://calendar.google.com/calendar/r/eventedit?add=pameltex@gmail.com', '_blank');
-
-                                const mockAppointment = {
-                                    doctor: "Pameltex Team",
-                                    time: "Pending Scheduling",
-                                    type: "Corporate Consultation"
-                                };
-                                localStorage.setItem('pameltex_appointment', JSON.stringify(mockAppointment));
-
-                                window.location.href = '/dashboard';
-                            }
+                            setIsModalOpen(true);
                         }}
                         className="btn btn-solid" style={{ backgroundColor: 'var(--bg-dark)', borderColor: 'var(--bg-dark)', color: '#fff', padding: '15px 30px', border: 'none', cursor: 'pointer' }}>
                         Contact Us Today
                     </button>
+
+                    <BookingModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        serviceType="Corporate Consultation"
+                        doctorName="Pameltex Team"
+                    />
                 </div>
             </section>
         </>
