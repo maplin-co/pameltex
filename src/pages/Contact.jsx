@@ -3,44 +3,25 @@ import { useState } from 'react';
 const Contact = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
         const formData = new FormData(e.target);
+        const name = formData.get('name');
+        const email = formData.get('email'); // We can't set the 'from', but we can include it in body
+        const type = formData.get('type');
+        const message = formData.get('message');
 
-        try {
-            // Using relative path to fetch from public folder where php script will be
-            const response = await fetch('send_mail.php', {
-                method: 'POST',
-                body: formData
-            });
+        const subject = `Inquiry: ${type} Consultation`;
+        const body = `Name: ${name}\nReturn Email: ${email}\nType: ${type}\n\nMessage:\n${message}`;
 
-            if (response.ok) {
-                alert('Thank you! Your message has been sent.');
-                e.target.reset();
-            } else {
-                // If we are on localhost, this might fail because there is no PHP server.
-                // We'll simulate success for the demo.
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    alert('(Demo Mode) Thank you! Your message has been sent.\n\nNote: In a real environment, this would be processed by the PHP server.');
-                    e.target.reset();
-                } else {
-                    alert('Oops! Something went wrong. Please try again.');
-                }
-            }
-        } catch (error) {
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                console.warn("Fetch failed, but simulating success for localhost demo.");
-                alert('(Demo Mode) Thank you! Your message has been sent.\n\nNote: In a real environment, this would be processed by the PHP server.');
-                e.target.reset();
-            } else {
-                console.error('Error:', error);
-                alert('There was a network error. Please try again later.');
-            }
-        } finally {
-            setIsSubmitting(false);
-        }
+        window.open(`mailto:info@pameltex.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+
+        // Reset local UI
+        alert("Opening your email client to send message...");
+        e.target.reset();
+        setIsSubmitting(false);
     };
 
     return (

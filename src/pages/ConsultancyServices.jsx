@@ -143,7 +143,18 @@ const ConsultancyServices = () => {
                     <div style={{ background: '#f9f9f9', padding: '40px', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
                         <form onSubmit={(e) => {
                             e.preventDefault();
-                            alert('Thank you! Your quote request has been received. We will be in touch shortly.');
+                            const formData = new FormData(e.target);
+                            const name = formData.get('name');
+                            const company = formData.get('company');
+                            const service = formData.get('service');
+                            const details = formData.get('details');
+
+                            const subject = `Consultancy Quote Request: ${service}`;
+                            const body = `Name: ${name}\nCompany: ${company}\nService: ${service}\n\nProject Details:\n${details}`;
+
+                            window.open(`mailto:info@pameltex.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+
+                            alert("Opening your email client to send the quote request...");
                             e.target.reset();
                         }}>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
