@@ -61,9 +61,33 @@ const CorporateServices = () => {
                 <div className="container">
                     <h2 className="cta-title">Ready to support your team?</h2>
                     <p style={{ marginBottom: '30px', fontSize: '18px' }}>Get in touch to discuss a tailored package for your organization.</p>
-                    <Link to="/contact" className="btn btn-solid" style={{ backgroundColor: 'var(--bg-dark)', borderColor: 'var(--bg-dark)' }}>
+                    <button
+                        onClick={() => {
+                            const isAuth = localStorage.getItem('pameltex_auth');
+                            if (!isAuth) {
+                                alert("Please sign in to book a consultation.");
+                                window.location.href = '/login';
+                                return;
+                            }
+
+                            const confirmBooking = confirm("Proceed to schedule a corporate consultation?\n\n(This will simulate a confirmed booking)");
+
+                            if (confirmBooking) {
+                                window.open('https://calendar.google.com/calendar/r/eventedit?add=pameltex@gmail.com', '_blank');
+
+                                const mockAppointment = {
+                                    doctor: "Pameltex Team",
+                                    time: "Pending Scheduling",
+                                    type: "Corporate Consultation"
+                                };
+                                localStorage.setItem('pameltex_appointment', JSON.stringify(mockAppointment));
+
+                                window.location.href = '/dashboard';
+                            }
+                        }}
+                        className="btn btn-solid" style={{ backgroundColor: 'var(--bg-dark)', borderColor: 'var(--bg-dark)', color: '#fff', padding: '15px 30px', border: 'none', cursor: 'pointer' }}>
                         Contact Us Today
-                    </Link>
+                    </button>
                 </div>
             </section>
         </>

@@ -55,8 +55,39 @@ const IndividualTherapy = () => {
                         </ul>
 
                         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-                            <Link to="/contact" className="btn btn-solid"
-                                style={{ padding: '15px 40px', fontSize: '18px' }}>Schedule a Consultation</Link>
+                            <button
+                                onClick={() => {
+                                    const isAuth = localStorage.getItem('pameltex_auth');
+                                    if (!isAuth) {
+                                        alert("Please sign in to book a consultation.");
+                                        window.location.href = '/login';
+                                        return;
+                                    }
+
+                                    // Simulation of booking flow
+                                    const confirmBooking = confirm("Proceed to Google Calendar to schedule your session with Pameltex?\n\n(This will simulate a confirmed booking in your dashboard)");
+
+                                    if (confirmBooking) {
+                                        // 1. Open Google Calendar (Simulated link)
+                                        window.open('https://calendar.google.com/calendar/r/eventedit?add=pameltex@gmail.com', '_blank');
+
+                                        // 2. Save mock appointment to dashboard
+                                        const mockAppointment = {
+                                            doctor: "Caroline Sithole",
+                                            time: "Aug 12, 10:00 AM", // Static mock date for demo
+                                            type: "Individual Therapy"
+                                        };
+                                        localStorage.setItem('pameltex_appointment', JSON.stringify(mockAppointment));
+
+                                        // 3. Redirect to Dashboard
+                                        window.location.href = '/dashboard';
+                                    }
+                                }}
+                                className="btn btn-solid"
+                                style={{ padding: '15px 40px', fontSize: '18px', border: 'none' }}
+                            >
+                                Schedule a Consultation
+                            </button>
                         </div>
                     </div>
                 </div>

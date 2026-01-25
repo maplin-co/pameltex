@@ -54,9 +54,33 @@ const ConsultancyServices = () => {
                     <p className="hero-subtitle" style={{ color: 'rgba(255,255,255,0.9)' }}>
                         Driving growth and excellence through strategic solutions.
                     </p>
-                    <Link to="/contact" className="btn btn-solid" style={{ backgroundColor: '#fff', color: 'var(--brand-teal)', borderColor: '#fff' }}>
+                    <button
+                        onClick={() => {
+                            const isAuth = localStorage.getItem('pameltex_auth');
+                            if (!isAuth) {
+                                alert("Please sign in to make an inquiry.");
+                                window.location.href = '/login';
+                                return;
+                            }
+
+                            const confirmBooking = confirm("Proceed to schedule an inquiry session?\n\n(This will simulate a confirmed booking)");
+
+                            if (confirmBooking) {
+                                window.open('https://calendar.google.com/calendar/r/eventedit?add=pameltex@gmail.com', '_blank');
+
+                                const mockAppointment = {
+                                    doctor: "Consultancy Team",
+                                    time: "TBD",
+                                    type: "Business Consultancy"
+                                };
+                                localStorage.setItem('pameltex_appointment', JSON.stringify(mockAppointment));
+
+                                window.location.href = '/dashboard';
+                            }
+                        }}
+                        className="btn btn-solid" style={{ backgroundColor: '#fff', color: 'var(--brand-teal)', borderColor: '#fff', padding: '12px 30px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
                         Get in Touch
-                    </Link>
+                    </button>
                 </div>
             </section>
 
