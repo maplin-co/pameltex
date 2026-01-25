@@ -10,6 +10,11 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Simulating login flow
+        localStorage.setItem('pameltex_auth', 'true');
+        // If no name is set (from signup), default to 'Client'
+        if (!localStorage.getItem('pameltex_user_name')) {
+            localStorage.setItem('pameltex_user_name', 'Client');
+        }
         navigate('/dashboard');
     };
 

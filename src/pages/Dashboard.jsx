@@ -9,16 +9,28 @@ const Dashboard = () => {
     const [sessionData, setSessionData] = useState(null);
     const [selectedResource, setSelectedResource] = useState(null); // For the modal viewer
 
-    // Simulate loading
+    // Simulate loading and auth check
     useEffect(() => {
+        const isAuth = localStorage.getItem('pameltex_auth');
+        if (!isAuth) {
+            navigate('/login');
+            return;
+        }
+
         const storedName = localStorage.getItem('pameltex_user_name');
         if (storedName) setUserName(storedName);
 
-        const session = localStorage.getItem('pameltex_session');
-        if (session) {
-            setSessionData(JSON.parse(session));
+        // Load appointment data if any
+        const appointment = localStorage.getItem('pameltex_appointment');
+        if (appointment) {
+            try {
+                const parsedData = JSON.parse(appointment);
+                setSessionData(parsedData);
+            } catch (e) {
+                console.error("Error parsing appointment data", e);
+            }
         }
-    }, []);
+    }, [navigate]);
 
     const handleMoodSelect = (index) => {
         setMood(index);

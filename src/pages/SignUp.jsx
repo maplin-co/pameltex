@@ -34,7 +34,7 @@ const SignUp = () => {
             localStorage.setItem('pameltex_user_name', formData.name);
             localStorage.setItem('pameltex_user_email', formData.email);
             // In a real app, you'd get a token here. We'll set a flag.
-            localStorage.setItem('pameltex_session', JSON.stringify({ loggedIn: true }));
+            localStorage.setItem('pameltex_auth', 'true');
 
             setIsLoading(false);
             // Redirect to Dashboard
@@ -88,6 +88,7 @@ const SignUp = () => {
                             value={formData.password}
                             onChange={handleChange}
                             required
+                            minLength={8}
                             style={{ width: '100%', padding: '12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '16px' }}
                             placeholder="Min. 8 characters"
                         />
@@ -102,6 +103,7 @@ const SignUp = () => {
                             value={formData.confirmPassword}
                             onChange={handleChange}
                             required
+                            minLength={8}
                             style={{ width: '100%', padding: '12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '16px' }}
                             placeholder="Re-enter password"
                         />
