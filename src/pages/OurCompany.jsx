@@ -65,35 +65,32 @@ const OurCompany = () => {
                         </div>
                     </div>
 
-                    {/* The Rest - Side by Side Grid */}
-                    <div className="team-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', maxWidth: '1000px', margin: '0 auto' }}>
-
-                        <div className="team-card-vertical"
-                            style={{ background: 'white', overflow: 'hidden', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column' }}>
-                            <div className="team-img" style={{ height: '400px', background: '#e0f7fa', width: '100%' }}>
-                                <img src={thamuImg} alt="Thamu Gordon Mthupa" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
-                            </div>
-                            <div className="team-info" style={{ padding: '30px', flex: 1 }}>
-                                <h3 style={{ fontSize: '22px', color: 'var(--brand-purple)', marginBottom: '5px' }}>Thamu Gordon Mthupa</h3>
-                                <p style={{ color: '#666', fontWeight: '600', marginBottom: '15px' }}>Lead Counselor</p>
-                                <p style={{ marginBottom: '15px', fontSize: '15px' }}>Thamu leads our counseling department with compassion and expertise. He is dedicated to fostering a supportive environment for our clients.</p>
-                                <p style={{ fontStyle: 'italic', color: 'var(--brand-teal)', fontSize: '14px' }}>"Empowering individuals to overcome life's challenges."</p>
-                            </div>
+                    {/* Thamu Gordon Mthupa */}
+                    <div className="team-card"
+                        style={{ background: 'white', maxWidth: '900px', margin: '0 auto 40px auto', display: 'flex', overflow: 'hidden', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', flexDirection: 'row', flexWrap: 'wrap' }}>
+                        <div className="team-img" style={{ flex: 1, minWidth: '300px', background: '#e0f7fa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <img src={thamuImg} alt="Thamu Gordon Mthupa" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }} />
                         </div>
-
-                        <div className="team-card-vertical"
-                            style={{ background: 'white', overflow: 'hidden', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column' }}>
-                            <div className="team-img" style={{ height: '400px', background: '#f3e5f5', width: '100%' }}>
-                                <img src={alpheausImg} alt="Alpheaus Chiwaze" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
-                            </div>
-                            <div className="team-info" style={{ padding: '30px', flex: 1 }}>
-                                <h3 style={{ fontSize: '22px', color: 'var(--brand-purple)', marginBottom: '5px' }}>Alpheaus Chiwaze</h3>
-                                <p style={{ color: '#666', fontWeight: '600', marginBottom: '15px' }}>Head of IT</p>
-                                <p style={{ marginBottom: '15px', fontSize: '15px' }}>Alpheaus is a multi-disciplinary creative and technologist specializing in premium web design, development, and digital experiences.</p>
-                                <p style={{ fontStyle: 'italic', color: 'var(--brand-teal)', fontSize: '14px' }}>"Technology bridges the gap between expert care and those who need it most."</p>
-                            </div>
+                        <div className="team-info" style={{ padding: '40px', flex: 1.5, minWidth: '300px' }}>
+                            <h3 style={{ fontSize: '24px', color: 'var(--brand-purple)', marginBottom: '5px' }}>Thamu Gordon Mthupa</h3>
+                            <p style={{ color: '#666', fontWeight: '600', marginBottom: '20px', fontSize: '18px' }}>Lead Counselor</p>
+                            <p style={{ marginBottom: '15px', fontSize: '16px' }}>Thamu leads our counseling department with compassion and expertise. He is dedicated to fostering a supportive environment for our clients and guiding our team.</p>
+                            <p className="team-quote" style={{ fontStyle: 'italic', color: 'var(--brand-teal)' }}>"Empowering individuals to overcome life's challenges is at the heart of everything we do."</p>
                         </div>
+                    </div>
 
+                    {/* Alpheaus Chiwaze */}
+                    <div className="team-card"
+                        style={{ background: 'white', maxWidth: '900px', margin: '0 auto 40px auto', display: 'flex', overflow: 'hidden', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', flexDirection: 'row', flexWrap: 'wrap' }}>
+                        <div className="team-img" style={{ flex: 1, minWidth: '300px', background: '#f3e5f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <img src={alpheausImg} alt="Alpheaus Chiwaze" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                        </div>
+                        <div className="team-info" style={{ padding: '40px', flex: 1.5, minWidth: '300px' }}>
+                            <h3 style={{ fontSize: '24px', color: 'var(--brand-purple)', marginBottom: '5px' }}>Alpheaus Chiwaze</h3>
+                            <p style={{ color: '#666', fontWeight: '600', marginBottom: '20px', fontSize: '18px' }}>Head of IT</p>
+                            <p style={{ marginBottom: '15px', fontSize: '16px' }}>Alpheaus is a multi-disciplinary creative and technologist specializing in premium web design, development, and digital experiences.</p>
+                            <p className="team-quote" style={{ fontStyle: 'italic', color: 'var(--brand-teal)' }}>"Technology bridges the gap between expert care and those who need it most."</p>
+                        </div>
                     </div>
                 </div>
             </section>
