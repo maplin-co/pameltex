@@ -353,7 +353,16 @@ const Dashboard = () => {
                                 ) : (
                                     <div style={{ width: '100%', textAlign: 'center' }}>
                                         <h3 style={{ marginBottom: '10px' }}>No upcoming sessions</h3>
-                                        <Link to="/contact" className="btn btn-solid" style={{ background: '#fff', color: 'var(--brand-teal)', border: 'none' }}>Book Session</Link>
+                                        <button
+                                            onClick={() => {
+                                                Calendly.initPopupWidget({ url: 'https://calendly.com/pameltex-info/30min' });
+                                                return false;
+                                            }}
+                                            className="btn btn-solid"
+                                            style={{ background: '#fff', color: 'var(--brand-teal)', border: 'none', cursor: 'pointer' }}
+                                        >
+                                            Book Session
+                                        </button>
                                     </div>
                                 )}
                             </div>
