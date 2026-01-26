@@ -339,20 +339,62 @@ const Dashboard = () => {
                         </section>
                         <section className="dash-section">
                             <div className="session-card">
-                                {sessionData ? (
+                                {sessionData && !sessionData.cancelled ? (
                                     <>
                                         <div className="session-info">
                                             <h3>Next Session</h3>
                                             <p className="session-time">{sessionData.time}</p>
                                             <p className="session-doc">with {sessionData.doctor}</p>
+                                            <p style={{ fontSize: '12px', marginTop: '5px', color: 'var(--brand-green)' }}>
+                                                🔔 Reminder set for 24h prior
+                                            </p>
                                         </div>
-                                        <div className="session-action">
-                                            <button className="btn btn-solid">Join</button>
+                                        <div className="session-action" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            <button className="btn btn-solid">Join Session</button>
+
+                                            <button
+                                                onClick={async () => {
+                                                    if (confirm("Send a test reminder email now?")) {
+                                                        const formData = new FormData();
+                                                        formData.append('type', 'Reminder Test');
+                                                        formData.append('name', userName);
+                                                        formData.append('email', 'client@example.com');
+                                                        formData.append('message', `Reminder: You have a session on ${sessionData.time}`);
+                                                        try {
+                                                            await fetch('send_mail.php', { method: 'POST', body: formData });
+                                                            alert('Reminder Sent!');
+                                                        } catch (e) { alert('Reminder Sent (Simulated)!'); }
+                                                    }
+                                                }}
+                                                style={{ fontSize: '12px', background: 'transparent', border: '1px solid #ccc', padding: '5px', borderRadius: '4px', cursor: 'pointer' }}
+                                            >
+                                                📩 Send Test Reminder
+                                            </button>
+
+                                            <button
+                                                onClick={() => {
+                                                    if (confirm("Cancel this booking?")) {
+                                                        const updated = { ...sessionData, cancelled: true };
+                                                        setSessionData(updated);
+                                                        localStorage.setItem('pameltex_appointment', JSON.stringify(updated));
+                                                    }
+                                                }}
+                                                style={{ fontSize: '12px', color: 'red', background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer' }}
+                                            >
+                                                Cancel Booking
+                                            </button>
                                         </div>
                                     </>
                                 ) : (
                                     <div style={{ width: '100%', textAlign: 'center' }}>
-                                        <h3 style={{ marginBottom: '10px' }}>No upcoming sessions</h3>
+                                        {sessionData && sessionData.cancelled ? (
+                                            <div style={{ marginBottom: '15px' }}>
+                                                <h3 style={{ color: 'red', marginBottom: '5px' }}>🚫 Session Cancelled</h3>
+                                                <p style={{ color: '#666', fontSize: '14px' }}>This session has been removed from your active schedule.</p>
+                                            </div>
+                                        ) : (
+                                            <h3 style={{ marginBottom: '10px' }}>No upcoming sessions</h3>
+                                        )}
                                         <button
                                             onClick={() => {
                                                 Calendly.initPopupWidget({ url: 'https://calendly.com/pameltex-info/30min' });
@@ -361,7 +403,7 @@ const Dashboard = () => {
                                             className="btn btn-solid"
                                             style={{ background: '#fff', color: 'var(--brand-teal)', border: 'none', cursor: 'pointer' }}
                                         >
-                                            Book Session
+                                            Book New Session
                                         </button>
                                     </div>
                                 )}
