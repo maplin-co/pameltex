@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const Resources = () => {
     return (
         <>
+            <SEO
+                title="Emergency Resources"
+                description="Immediate support and contact information for crisis situations in Botswana. Police, GBV, and emergency numbers."
+                keywords="emergency numbers Botswana, GBV support, crisis helpline, police Botswana"
+            />
             <section className="hero page-hero" style={{ padding: '60px 0', background: 'var(--brand-purple)' }}>
                 <div className="container">
                     <h1 className="hero-title" style={{ fontSize: '36px', color: '#fff' }}>Emergency Resources</h1>

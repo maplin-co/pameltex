@@ -8,8 +8,8 @@ const Home = () => {
     return (
         <>
             <SEO
-                title="Home"
-                description="Pameltex Psychosocial & Counseling offers professional mental health services, individual therapy, and corporate wellness programs in Gaborone, Botswana."
+                title="Psychosocial Support & Counselling Services | Botswana"
+                description="Pameltex provides professional counselling, individual therapy, and corporate wellness programs in Gaborone. Prioritize your mental health with certified experts."
             >
                 <script type="application/ld+json">
                     {JSON.stringify({
