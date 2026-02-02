@@ -53,7 +53,7 @@ const Home = () => {
 
             <section className="hero">
                 <div className="container hero-container">
-                    <h1 className="hero-title">Prioritising your Mental Health.</h1>
+                    <h1 className="hero-title">Professional Counselling & Psychosocial Support to Prioritise Your Mental Health.</h1>
                     <p className="hero-subtitle">What type of therapy are you looking for?</p>
                     <div className="therapy-cards">
                         <Link to="/individual-therapy" className="card">
@@ -96,7 +96,10 @@ const Home = () => {
 
             <section className="intro-text-section" style={{ padding: '40px 0', textAlign: 'center', backgroundColor: '#f9f9f9' }}>
                 <div className="container">
-                    <p style={{ fontSize: '1.2rem', color: '#555', marginBottom: '15px' }}>Not sure if therapy is right for you?</p>
+                    <p style={{ fontSize: '1.2rem', color: '#555', marginBottom: '15px' }}>
+                        The <a href="https://www.who.int/health-topics/mental-health" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--brand-teal)', textDecoration: 'underline' }}>World Health Organization</a> emphasizes that mental health is a state of mental well-being that enables people to cope with the stresses of life.
+                        <br />Not sure if therapy is right for you?
+                    </p>
                     <Link to="/what-is-counselling" className="btn-link" style={{ color: 'var(--brand-teal)', fontWeight: '600', textDecoration: 'underline' }}>
                         Read our guide on What is Counselling &rarr;
                     </Link>
@@ -132,7 +135,10 @@ const Home = () => {
             <section className="value-props">
                 <div className="container">
                     <h2 className="section-title">Professional and qualified therapists who you can trust.</h2>
-                    <p className="section-desc">Tap into a network of experienced counselors from the comfort of your own home or office.</p>
+                    <p className="section-desc">
+                        Tap into a network of experienced counselors from the comfort of your own home or office.
+                        Learn more about <Link to="/our-company" style={{ color: 'var(--brand-teal)', textDecoration: 'underline' }}>our company mission</Link> and standards.
+                    </p>
 
                     <div className="comparison-table">
                         <div className="comparison-row header">
