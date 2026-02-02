@@ -2,5 +2,16 @@
     "buildCommand": "echo 'No build necessary for Vanilla SPA'",
     "outputDirectory": ".",
     "ignoreCommand": "git check-ignore -v .",
-    "framework": "vite"
+    "framework": "vite",
+    "headers": [
+        {
+            "source": "/(.*).(jpg|jpeg|png|svg|webp|ico)",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=31536000, immutable"
+                }
+            ]
+        }
+    ]
 }
