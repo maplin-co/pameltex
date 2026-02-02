@@ -1131,3 +1131,88 @@ a {
         gap: 20px;
     }
 }
+
+/* Educational Pages */
+.page-header {
+    background-color: var(--brand-light);
+    padding: 60px 0 40px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-title {
+    font-size: 36px;
+    color: var(--brand-teal);
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    font-size: 18px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.section {
+    padding: 60px 0;
+}
+
+.content-block {
+    margin-bottom: 50px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-block h2 {
+    color: var(--brand-purple);
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.content-block p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.feature-list li {
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+    font-size: 16px;
+}
+
+.feature-list li:before {
+    content: "•";
+    color: var(--brand-teal);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.benefits-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.benefit-item {
+    background: var(--brand-light);
+    color: var(--brand-teal);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 15px;
+}

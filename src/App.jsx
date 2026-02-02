@@ -13,6 +13,7 @@ import ConsultancyServices from './pages/ConsultancyServices';
 import NotFound from './pages/NotFound';
 import Dashboard from './pages/Dashboard';
 import Resources from './pages/Resources';
+import WhatIsCounselling from './pages/WhatIsCounselling';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/consultancy-services" element={<ConsultancyServices />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/resources" element={<Resources />} />
+                    <Route path="/what-is-counselling" element={<WhatIsCounselling />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>

@@ -94,6 +94,15 @@ const Home = () => {
                 </div>
             </section>
 
+            <section className="intro-text-section" style={{ padding: '40px 0', textAlign: 'center', backgroundColor: '#f9f9f9' }}>
+                <div className="container">
+                    <p style={{ fontSize: '1.2rem', color: '#555', marginBottom: '15px' }}>Not sure if therapy is right for you?</p>
+                    <Link to="/what-is-counselling" className="btn-link" style={{ color: 'var(--brand-teal)', fontWeight: '600', textDecoration: 'underline' }}>
+                        Read our guide on What is Counselling &rarr;
+                    </Link>
+                </div>
+            </section>
+
             {/* NEW: How It Works Section */}
             <section className="process-section">
                 <div className="container">
