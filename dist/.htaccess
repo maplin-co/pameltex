@@ -17,6 +17,8 @@ RewriteRule ^ index.html [QSA,L]
   ExpiresByType image/gif "access plus 1 year"
   ExpiresByType image/png "access plus 1 year"
   ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
   ExpiresByType image/x-icon "access plus 1 year"
   ExpiresByType text/css "access plus 1 month"
   ExpiresByType text/javascript "access plus 1 month"
@@ -24,5 +26,12 @@ RewriteRule ^ index.html [QSA,L]
   ExpiresDefault "access plus 1 week"
 </IfModule>
 
+<IfModule mod_headers.c>
+  <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|webp|svg|avif|js|css|swf)$">
+    Header set Cache-Control "max-age=31536000, public"
+  </FilesMatch>
+</IfModule>
+
 # DISABLE DIRECTORY BROWSING
 Options -Indexes
+IndexIgnore *

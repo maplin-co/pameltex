@@ -16,6 +16,8 @@ import Resources from './pages/Resources';
 import WhatIsCounselling from './pages/WhatIsCounselling';
 import ScrollToTop from './components/ScrollToTop';
 
+import ChatBot from './components/ChatBot';
+
 function App() {
     return (
         <Router>
@@ -39,6 +41,7 @@ function App() {
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>
+            <ChatBot />
             <Footer />
         </Router>
     );
