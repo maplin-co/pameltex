@@ -1,8 +1,10 @@
 .chatbot-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    z-index: 2147483647 !important;
+    /* Max integer value for z-index */
+    display: block !important;
 }
 
 /* Floating Action Button */
