@@ -1,10 +1,8 @@
-/* ChatBot.css */
-
 .chatbot-container {
     position: fixed;
-    bottom: 300px;
+    bottom: 20px;
     right: 20px;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 /* Floating Action Button */
@@ -128,7 +126,7 @@
     color: var(--text-dark);
     border: 1px solid #eee;
     border-bottom-left-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 /* Input Area */
@@ -189,12 +187,25 @@
     margin: 0 2px;
 }
 
-.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+.typing-indicator span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: -0.16s;
+}
 
 @keyframes typing {
-    0%, 80%, 100% { transform: scale(0); }
-    40% { transform: scale(1); }
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
 }
 
 /* Mobile Responsiveness */
@@ -203,7 +214,8 @@
         width: calc(100vw - 40px);
         bottom: 80px;
         right: 0;
-        left: -20px; /* Center relative to parent */
+        left: -20px;
+        /* Center relative to parent */
     }
 
     .chatbot-container.open .chatbot-window {
