@@ -6,7 +6,7 @@ const ChatBot = () => {
     const [messages, setMessages] = useState([
         {
             role: 'assistant',
-            content: "Hello! I'm Luna, your Pameltex assistant. How can I help you today?"
+            content: "Hello! Dumela! I'm Luna, your Pameltex assistant. How can I help you today? / Nka go thusa jang gompieno?"
         }
     ]);
     const [input, setInput] = useState('');
