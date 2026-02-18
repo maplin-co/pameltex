@@ -47,8 +47,8 @@ const ChatBot = () => {
         scrollToBottom();
     }, [messages, isOpen, leadCollected]);
 
-    // Submit lead to backend → Supabase
-    const handleLeadSubmit = async (e) => {
+    // Submit lead to backend → Supabase (Fire-and-forget / Optimistic UI)
+    const handleLeadSubmit = (e) => {
         e.preventDefault();
 
         // Basic validation
@@ -57,28 +57,24 @@ const ChatBot = () => {
             return;
         }
 
-        setLeadSubmitting(true);
-        try {
-            await fetch(`${BACKEND_URL}/api/lead`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...leadData,
-                    interest: 'Website Chat',
-                    message: 'Lead collected on chat open'
-                }),
-            });
-        } catch (err) {
-            console.error('Lead save error:', err);
-        } finally {
-            setLeadSubmitting(false);
-            setLeadCollected(true);
-            setMessages([{
-                role: 'assistant',
-                content: `Thank you, ${leadData.name}! 👋 Welcome to Pameltex.\n\nI'm Luna, your virtual assistant. How can I help you today?`,
-                quickReplies: DEFAULT_QUICK_REPLIES
-            }]);
-        }
+        // 🚀 Show chat immediately (Optimistic UI)
+        setLeadCollected(true);
+        setMessages([{
+            role: 'assistant',
+            content: `Thank you, ${leadData.name}! 👋 Welcome to Pameltex.\n\nI'm Luna, your virtual assistant. How can I help you today?`,
+            quickReplies: DEFAULT_QUICK_REPLIES
+        }]);
+
+        // 🔥 Save to backend in background
+        fetch(`${BACKEND_URL}/api/lead`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ...leadData,
+                interest: 'Website Chat',
+                message: 'Lead collected on chat open'
+            }),
+        }).catch(err => console.error('Background lead save error:', err));
     };
 
     // Send a chat message
