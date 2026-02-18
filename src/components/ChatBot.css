@@ -373,6 +373,47 @@
     color: #fff;
 }
 
+/* Lead Gate (Pre-chat form) */
+.chatbot-lead-gate {
+    padding: 30px 25px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #fff;
+}
+
+.lead-gate-intro {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.lead-gate-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--brand-purple, #6B4C9A);
+    margin-bottom: 10px;
+}
+
+.lead-gate-sub {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.lead-gate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lead-gate-privacy {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    margin-top: 20px;
+}
+
 /* Message bubble max-width override for assistant with quick replies */
 .message.assistant {
     max-width: 90%;
