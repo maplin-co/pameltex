@@ -6,7 +6,8 @@ const ChatBot = () => {
     const [messages, setMessages] = useState([
         {
             role: 'assistant',
-            content: "Hello! Dumela! I'm Luna, your Pameltex assistant. How can I help you today? / Nka go thusa jang gompieno?"
+            content: "Hello! Dumela! 👋 I'm Luna, your Pameltex assistant.\n\nHow can I help you today?",
+            quickReplies: ['Individual Therapy', 'Couples Therapy', 'Corporate Services', 'Book a Session', 'Pricing']
         }
     ]);
     const [input, setInput] = useState('');
@@ -61,11 +62,12 @@ const ChatBot = () => {
 
             setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
 
-            // Show lead form if bot suggests it
-            if (data.shouldCollectLead && !showLeadForm) {
+            // Show lead form if bot suggests it, or after 2nd message
+            const shouldShow = data.collectLead || data.shouldCollectLead;
+            if (shouldShow && !showLeadForm) {
                 setTimeout(() => {
                     setShowLeadForm(true);
-                }, 2000);
+                }, 1500);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -81,8 +83,8 @@ const ChatBot = () => {
     const handleLeadSubmit = async (e) => {
         e.preventDefault();
 
-        if (!leadData.name || !leadData.phone) {
-            alert('Please provide your name and phone number');
+        if (!leadData.name || !leadData.phone || !leadData.email) {
+            alert('Please provide your name, phone number, and email');
             return;
         }
 
@@ -140,16 +142,44 @@ const ChatBot = () => {
                 <div className="chatbot-header">
                     <div className="chatbot-header-info">
                         <h3>Luna</h3>
-                        <span className="chatbot-status">Online</span>
+                        <span className="chatbot-status">Online · Pameltex</span>
                     </div>
+                    <a
+                        href="/booking"
+                        className="chatbot-book-btn"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        📅 Book
+                    </a>
                 </div>
 
                 <div className="chatbot-messages">
                     {messages.map((msg, index) => (
                         <div key={index} className={`message ${msg.role}`}>
                             <div className="message-content">
-                                {msg.content}
+                                {msg.content.split('\n').map((line, i) => (
+                                    <span key={i}>{line}{i < msg.content.split('\n').length - 1 && <br />}</span>
+                                ))}
                             </div>
+                            {msg.quickReplies && (
+                                <div className="quick-replies">
+                                    {msg.quickReplies.map((reply, i) => (
+                                        <button
+                                            key={i}
+                                            className="quick-reply-btn"
+                                            onClick={() => {
+                                                setInput(reply);
+                                                setTimeout(() => {
+                                                    document.querySelector('.chatbot-input-area button[type="submit"]')?.click();
+                                                }, 50);
+                                            }}
+                                        >
+                                            {reply}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     ))}
                     {isLoading && (
@@ -186,9 +216,10 @@ const ChatBot = () => {
                                     />
                                     <input
                                         type="email"
-                                        placeholder="Email (optional)"
+                                        placeholder="Email Address *"
                                         value={leadData.email}
                                         onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
+                                        required
                                         style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
                                     />
                                     <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>

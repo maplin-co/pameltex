@@ -15,6 +15,7 @@ import Dashboard from './pages/Dashboard';
 import Resources from './pages/Resources';
 import WhatIsCounselling from './pages/WhatIsCounselling';
 import ScrollToTop from './components/ScrollToTop';
+import Booking from './pages/Booking';
 
 import ChatBot from './components/ChatBot';
 
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/resources" element={<Resources />} />
                     <Route path="/what-is-counselling" element={<WhatIsCounselling />} />
+                    <Route path="/booking" element={<Booking />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>

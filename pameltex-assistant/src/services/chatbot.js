@@ -5,11 +5,11 @@ const systemPrompt = require('../config/systemPrompt');
  * No AI API needed - uses the comprehensive knowledge base
  */
 
-// Knowledge base extracted from system prompt
+// Knowledge base
 const knowledgeBase = {
     services: {
         individual: {
-            keywords: ['individual', 'therapy', 'personal', 'anxiety', 'stress', 'depression', 'counseling', 'counselling'],
+            keywords: ['individual', 'therapy', 'personal', 'anxiety', 'stress', 'depression', 'counseling', 'counselling', 'mental health'],
             response: `**Individual Therapy at Pameltex**
 
 We offer professional individual therapy for:
@@ -23,175 +23,155 @@ We offer professional individual therapy for:
 • Life Transitions
 
 **Our Approach:**
-We specialize in Cognitive Behavioral Therapy (CBT), along with Behavior Therapy, Humanistic Therapy, and Psychoanalysis.
+We specialise in Cognitive Behavioural Therapy (CBT), along with Behaviour Therapy, Humanistic Therapy, and Psychoanalysis.
 
 **Session Details:**
-• 50-60 minute sessions
+• 50–60 minute sessions
 • Available online (Zoom/Google Meet) or in-person
 • Flexible scheduling including evenings
 • Affordable rates
 
-**Book a Free Consultation:**
-📅 https://calendly.com/pameltex-info/30min
-📞 +267 72 534 203
-📧 info@pameltex.com`
+Would you like us to get in touch with you? Share your name and number and we'll reach out. 📞`
         },
         couples: {
             keywords: ['couple', 'couples', 'marriage', 'relationship', 'partner', 'married'],
             response: `**Couples Therapy at Pameltex**
 
-We help couples with:
-• Communication problems
+We help couples navigate:
+• Communication difficulties
 • Trust and intimacy issues
 • Conflict resolution
-• Pre-marital counseling
+• Pre-marital counselling
 • Relationship strengthening
 • Infidelity recovery
 • Co-parenting challenges
 
-**Format:** Joint sessions with both partners, 60-90 minutes
+**Format:** Joint sessions with both partners, 60–90 minutes.
 
-**Book Your Session:**
-📅 https://calendly.com/pameltex-info/30min
-📞 +267 72 534 203
-📧 info@pameltex.com`
+Would you like us to reach out to you? Leave your name and contact number and we'll be in touch. 📞`
         },
         corporate: {
-            keywords: ['corporate', 'business', 'company', 'organization', 'workplace', 'employee', 'team'],
+            keywords: ['corporate', 'business', 'company', 'organization', 'organisation', 'workplace', 'employee', 'team', 'staff wellness'],
             response: `**Corporate Services at Pameltex**
 
-We partner with organizations for:
-• Employee Wellness Programs
+We partner with organisations to support employee wellbeing through:
+• Employee Wellness Programmes
 • Mental Health Workshops & Training
 • Stress Management Seminars
 • Team Building & Communication
 • Crisis Intervention
 • Workplace Conflict Resolution
-• Burnout Prevention Programs
+• Burnout Prevention Programmes
 • Leadership Coaching
 
 **Notable Clients:**
-✓ Letlole La Rona
-✓ Unitrans
-✓ Letshego
-✓ Various government departments
+✓ Letlole La Rona  ✓ Unitrans  ✓ Letshego  ✓ Various government departments
 
-**Customized packages** available based on your organization's size and needs.
+Customised packages available based on your organisation's size and needs.
 
-**Contact us for a consultation:**
-📞 +267 72 534 203
-📧 info@pameltex.com`
+Interested in a proposal? Leave your name, number and email and we'll get back to you. 📧`
         }
     },
 
     booking: {
-        keywords: ['book', 'appointment', 'schedule', 'session', 'consultation', 'calendly'],
-        response: `**How to Book Your Session**
+        keywords: ['book', 'appointment', 'schedule', 'session', 'consultation', 'reserve', 'how do i book'],
+        response: `**Booking a Session at Pameltex**
 
-**Option 1: Online Booking (Recommended)**
-📅 Visit: https://calendly.com/pameltex-info/30min
-Choose your preferred date and time - instant confirmation!
+Getting started is simple:
 
-**Option 2: Phone Booking**
-📞 Call: +267 72 534 203 (Primary)
-📞 Alternative: +267 71 234 567
-⏰ Available: Mon-Fri, 8AM-5PM
+📅 **Book Online**
+Visit our booking page: www.pameltex.com/booking
+Choose your preferred date and time — instant confirmation!
 
-**Option 3: Email Booking**
-📧 Email: info@pameltex.com
-We respond within 24 hours
+📞 **Call Us**
++267 72 534 203
+Monday – Friday, 8:00 AM – 5:00 PM
 
-**First Session:**
-Your initial consultation is 30 minutes and FREE! We'll discuss your concerns, goals, and recommend the best approach for you.
+📧 **Email Us**
+info@pameltex.com
 
-May I have your name and phone number so we can follow up with you?`
+**What to Expect:**
+Your first session is an initial consultation where we discuss your concerns, goals, and recommend the best approach for you.
+
+To make it even easier — share your **name, phone number, and email** and our team will contact you to arrange your session. 😊`
     },
 
     pricing: {
-        keywords: ['price', 'cost', 'fee', 'charge', 'afford', 'expensive', 'cheap', 'payment'],
+        keywords: ['price', 'cost', 'fee', 'charge', 'afford', 'expensive', 'cheap', 'payment', 'rate', 'how much'],
         response: `**Affordable Mental Health Care**
 
-We're proud to be one of the most affordable mental health providers in Botswana without compromising quality.
+Pameltex is proud to be one of the most affordable mental health providers in Botswana — without compromising on quality.
 
-**Pricing:**
-Specific pricing is discussed during your FREE 30-minute initial consultation, as we tailor our services to your needs.
+Pricing is personalised and discussed during your initial consultation based on your specific needs.
 
-**Payment Methods:**
+**Payment Methods Accepted:**
 • Cash
 • Bank Transfer
 • Mobile Money
 
-**Why Choose Us:**
-✓ Low-cost provider
+**Why Choose Pameltex:**
+✓ Competitive, transparent rates
 ✓ Professional excellence
 ✓ No hidden fees
 ✓ Flexible payment options
 
-**Book your FREE consultation:**
-📅 https://calendly.com/pameltex-info/30min
-📞 +267 72 534 203`
+To discuss pricing, contact us:
+📞 +267 72 534 203
+📧 info@pameltex.com`
     },
 
     team: {
-        keywords: ['counselor', 'counsellor', 'therapist', 'psychologist', 'caroline', 'who', 'team', 'staff'],
+        keywords: ['counselor', 'counsellor', 'therapist', 'psychologist', 'caroline', 'who', 'team', 'staff', 'qualifications'],
         response: `**Our Professional Team**
 
-**Caroline Sithole** - Principal Counsellor
+**Caroline Sithole** — Principal Counsellor
 • Qualifications: MSc, BSc, PSY
-• Specialization: Cognitive Behavioral Therapy (CBT)
+• Specialisation: Cognitive Behavioural Therapy (CBT)
 • Approach: Mentors clients toward self-reliance and personal growth
 
-**Thamu X Gordon Mthupa** - Lead Counselor
-• Leadership: Leads with compassion and expertise
-• Focus: Client-centered therapeutic approaches
+**Thamu X Gordon Mthupa** — Lead Counsellor
+• Leads with compassion and expertise
+• Focus: Client-centred therapeutic approaches
 
-**Alpheaus Chiwaze** - Head of Operations
-• Role: Ensures smooth operations and excellent client experience
+**Alpheaus Chiwaze** — Head of Operations
+• Ensures a smooth, excellent client experience
 
-All our counselors are qualified professionals committed to your wellbeing.`
+All our counsellors are qualified professionals dedicated to your wellbeing and growth.`
     },
 
     contact: {
-        keywords: ['contact', 'phone', 'email', 'address', 'location', 'where', 'find'],
+        keywords: ['contact', 'phone', 'email', 'address', 'location', 'where', 'find us', 'office'],
         response: `**Contact Pameltex**
 
-📞 **Phone:**
-+267 72 534 203 (Primary)
-+267 71 234 567 (Alternative)
+📞 **Phone:** +267 72 534 203
 
-📧 **Email:**
-info@pameltex.com
+📧 **Email:** info@pameltex.com
 
 📍 **Address:**
-Plot 18680 Khuhurutse St
-Phase 2, Gaborone, Botswana
+Plot 18680 Khuhurutse St, Phase 2
+Gaborone, Botswana
 
 🕐 **Office Hours:**
-Monday - Friday: 8:00 AM - 5:00 PM
+Monday – Friday: 8:00 AM – 5:00 PM
 Saturday: By appointment only
 Sunday: Closed
 
-🌐 **Website:**
-www.pameltex.com
-
-📅 **Book Online:**
-https://calendly.com/pameltex-info/30min`
+🌐 **Website:** www.pameltex.com`
     },
 
     confidentiality: {
         keywords: ['confidential', 'private', 'secret', 'privacy', 'trust', 'safe'],
         response: `**Your Privacy is Our Priority**
 
-🔒 **Strict Confidentiality:**
-Everything discussed in sessions is completely private and confidential.
+🔒 Everything discussed in your sessions is completely private and confidential.
 
-✓ We follow international counseling ethics protocols
+✓ We follow international counselling ethics protocols
 ✓ All client information is stored securely
-✓ HIPAA-compliant for online sessions
+✓ Secure, encrypted platforms used for online sessions
 ✓ Your trust is sacred to us
 
 **The Only Exception:**
-We may need to break confidentiality ONLY if there's immediate risk of harm to yourself or others.
+Confidentiality may only be broken if there is an immediate risk of harm to yourself or others — as required by professional ethics.
 
 You can speak freely and openly with complete confidence.`
     },
@@ -200,37 +180,35 @@ You can speak freely and openly with complete confidence.`
         keywords: ['online', 'virtual', 'zoom', 'video', 'remote', 'internet'],
         response: `**Online Therapy Sessions**
 
-Yes! We offer secure online sessions via:
+Yes — we offer secure, professional online sessions via:
 • Zoom
 • Google Meet
 
 **Benefits of Online Therapy:**
-✓ Convenience - from home or office
-✓ Flexible scheduling
-✓ Same professional quality
-✓ Secure and confidential
-✓ HIPAA-compliant platforms
+✓ Attend from home, work, or anywhere
+✓ Flexible scheduling to suit your lifestyle
+✓ Same professional quality as in-person sessions
+✓ Secure and confidential platforms
 
-**Perfect for:**
-• Busy schedules
-• Those outside Gaborone
-• Comfort of your own space
-• Social distancing preferences
+**Ideal for:**
+• Busy professionals
+• Clients outside Gaborone
+• Those who prefer the comfort of their own space
 
-**Book your online session:**
-📅 https://calendly.com/pameltex-info/30min
-📞 +267 72 534 203`
+To book your online session:
+📞 +267 72 534 203
+📧 info@pameltex.com`
     },
 
     languages: {
         keywords: ['language', 'setswana', 'english', 'speak', 'tswana'],
         response: `**Dumela! / Hello!**
 
-We're fluent in both:
+We offer sessions in both:
 🇧🇼 **Setswana**
 🇬🇧 **English**
 
-You can speak in whichever language you're most comfortable with. We understand that discussing personal matters is easier in your preferred language.
+You are welcome to speak in whichever language you feel most comfortable with.
 
 Re bua Setswana le Sekgoa ka botlalo!
 
@@ -239,40 +217,37 @@ How can I help you today? / Nka go thusa jang?`
 
     crisis: {
         keywords: ['suicide', 'kill myself', 'self-harm', 'harm myself', 'die', 'end it', 'emergency'],
-        response: `**⚠️ IMMEDIATE HELP NEEDED**
+        response: `**⚠️ Immediate Support**
 
-I'm concerned about your safety. Please:
+I'm concerned about your safety. Please reach out for help right now:
 
-🚨 **If you're in immediate danger:**
-• Call emergency services: 997
+🚨 **If you are in immediate danger:**
+• Call emergency services: **997**
 • Go to the nearest hospital immediately
-• Contact a trusted friend or family member NOW
+• Contact a trusted person right now
 
-**Crisis Support:**
-We can provide ongoing professional support once you're safe.
+📞 **Call Pameltex:** +267 72 534 203
 
-📞 **Call us:** +267 72 534 203
-
-You are not alone. Help is available. Please reach out immediately.`
+You are not alone. Help is available. Please reach out — we care about you.`
     }
 };
 
 // Greeting responses
 const greetings = {
-    keywords: ['hello', 'hi', 'hey', 'dumela', 'greetings', 'good morning', 'good afternoon'],
+    keywords: ['hello', 'hi', 'hey', 'dumela', 'greetings', 'good morning', 'good afternoon', 'good evening', 'start'],
     responses: [
         "Hello! / Dumela! I'm Luna, your Pameltex assistant. How can I help you today?",
-        "Hi there! Welcome to Pameltex. I'm here to help you with information about our mental health services. What can I assist you with?",
-        "Dumela! / Hello! Welcome to Pameltex Psychosocial & Counseling. How may I help you today?"
+        "Hi there! Welcome to Pameltex. I'm here to help with information about our mental health services. What can I assist you with?",
+        "Dumela! Welcome to Pameltex Psychosocial & Counselling. How may I help you today?"
     ]
 };
 
 // FAQ responses
 const faqs = {
-    'how long': 'Therapy duration varies by individual. Some see improvement in 6-8 sessions, while others benefit from longer-term support. We will discuss this during your free initial consultation.',
-    'first session': 'Your first session is a FREE 30-minute consultation where we discuss your concerns, goals, and recommend the best therapeutic approach for you.',
-    'what is cbt': 'Cognitive Behavioral Therapy (CBT) is our specialty. It is an evidence-based approach that helps you identify and change negative thought patterns and behaviors. It is highly effective for anxiety, depression, and many other concerns.',
-    'do you take insurance': 'Please contact us directly to discuss payment options and insurance. We offer affordable rates and flexible payment methods including cash, bank transfer, and mobile money.'
+    'how long': 'The duration of therapy varies by individual. Some clients see meaningful progress in 6–8 sessions, while others benefit from longer-term support. We will discuss this during your initial consultation.',
+    'first session': 'Your first session is an initial consultation where we discuss your concerns, goals, and recommend the most suitable therapeutic approach for you.',
+    'what is cbt': 'Cognitive Behavioural Therapy (CBT) is our primary specialisation. It is an evidence-based approach that helps you identify and change unhelpful thought patterns and behaviours. It is highly effective for anxiety, depression, and many other concerns.',
+    'do you take insurance': 'Please contact us directly to discuss payment options. We offer affordable rates and flexible payment methods including cash, bank transfer, and mobile money.'
 };
 
 /**
@@ -281,7 +256,7 @@ const faqs = {
 const processMessage = (message) => {
     const lowerMessage = message.toLowerCase();
 
-    // Check for crisis keywords first
+    // Check for crisis keywords first (highest priority)
     if (knowledgeBase.crisis.keywords.some(kw => lowerMessage.includes(kw))) {
         return {
             response: knowledgeBase.crisis.response,
@@ -302,10 +277,27 @@ const processMessage = (message) => {
     // Check knowledge base categories
     for (const [category, data] of Object.entries(knowledgeBase)) {
         if (data.keywords && data.keywords.some(kw => lowerMessage.includes(kw))) {
+            // Trigger lead collection for service inquiries and booking
+            const shouldCollect = ['booking', 'individual', 'couples', 'corporate'].includes(category) ||
+                (knowledgeBase.services && knowledgeBase.services[category]);
             return {
                 response: data.response,
                 category: category,
-                collectLead: category === 'booking' || category === 'services'
+                collectLead: category === 'booking' ||
+                    category === 'individual' ||
+                    category === 'couples' ||
+                    category === 'corporate'
+            };
+        }
+    }
+
+    // Check nested services
+    for (const [serviceKey, serviceData] of Object.entries(knowledgeBase.services)) {
+        if (serviceData.keywords && serviceData.keywords.some(kw => lowerMessage.includes(kw))) {
+            return {
+                response: serviceData.response,
+                category: serviceKey,
+                collectLead: true
             };
         }
     }
@@ -321,23 +313,23 @@ const processMessage = (message) => {
         }
     }
 
-    // Default response
+    // Default response — professional with clear service options
     return {
-        response: `I'd be happy to help you! I can provide information about:
+        response: `Thank you for reaching out to **Pameltex Psychosocial & Counselling**. I'm Luna, your virtual assistant.
 
-• **Individual Therapy** - anxiety, stress, depression, personal growth
-• **Couples Therapy** - relationship support and counseling
-• **Corporate Services** - employee wellness programs
-• **Booking** - how to schedule your session
-• **Our Team** - meet our qualified counselors
-• **Pricing** - affordable mental health care
-• **Contact** - phone, email, location
+I can help you with information on:
 
-What would you like to know more about?
+🧠 **Individual Therapy** — anxiety, stress, depression, personal growth
+💑 **Couples Therapy** — relationship and communication support
+🏢 **Corporate Services** — employee wellness programmes
+📋 **Booking** — how to schedule your session
+👥 **Our Team** — meet our qualified counsellors
+💰 **Pricing** — affordable mental health care
+📍 **Contact** — phone, email, location
 
-Or, you can book a FREE 30-minute consultation:
-📅 https://calendly.com/pameltex-info/30min
-📞 +267 72 534 203`,
+Simply type what you'd like to know more about, or reach us directly:
+📞 +267 72 534 203
+📧 info@pameltex.com`,
         category: 'general',
         collectLead: false
     };

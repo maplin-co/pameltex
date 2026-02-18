@@ -224,3 +224,54 @@
         height: calc(100vh - 120px);
     }
 }
+
+/* Book Button in Header */
+.chatbot-book-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.chatbot-book-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+    color: white;
+}
+
+/* Quick Reply Buttons */
+.quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    max-width: 100%;
+}
+
+.quick-reply-btn {
+    background: #fff;
+    border: 1.5px solid var(--brand-purple, #6B4C9A);
+    color: var(--brand-purple, #6B4C9A);
+    border-radius: 16px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.quick-reply-btn:hover {
+    background: var(--brand-purple, #6B4C9A);
+    color: #fff;
+}
+
+/* Message bubble max-width override for assistant with quick replies */
+.message.assistant {
+    max-width: 90%;
+}
