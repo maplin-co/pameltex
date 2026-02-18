@@ -35,7 +35,7 @@ const ChatBot = () => {
 
         try {
             // Use environment variable or fallback to Render URL
-            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://pameltex-assistant.onrender.com';
+            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://pameltex.onrender.com';
 
             const response = await fetch(`${backendUrl}/api/chat`, {
                 method: 'POST',
@@ -87,7 +87,7 @@ const ChatBot = () => {
         }
 
         try {
-            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://pameltex-assistant.onrender.com';
+            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://pameltex.onrender.com';
 
             const response = await fetch(`${backendUrl}/api/lead`, {
                 method: 'POST',
