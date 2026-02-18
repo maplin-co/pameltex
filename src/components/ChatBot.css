@@ -217,13 +217,115 @@
         bottom: 80px;
         right: 0;
         left: -20px;
-        /* Center relative to parent */
     }
 
     .chatbot-container.open .chatbot-window {
         height: calc(100vh - 120px);
     }
 }
+
+/* Book Button in Header */
+.chatbot-book-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.chatbot-book-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+    color: white;
+}
+
+/* Quick Reply Buttons */
+.quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    max-width: 100%;
+}
+
+.quick-reply-btn {
+    background: #fff;
+    border: 1.5px solid var(--brand-purple, #6B4C9A);
+    color: var(--brand-purple, #6B4C9A);
+    border-radius: 16px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.quick-reply-btn:hover:not(:disabled) {
+    background: var(--brand-purple, #6B4C9A);
+    color: #fff;
+}
+
+.quick-reply-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Message bubble wider for assistant with quick replies */
+.message.assistant {
+    max-width: 90%;
+}
+
+/* Lead Form */
+.lead-form-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.lead-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lead-input {
+    padding: 9px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+.lead-input:focus {
+    border-color: var(--brand-purple, #6B4C9A);
+}
+
+.lead-submit-btn {
+    margin-top: 4px;
+    padding: 10px;
+    background: var(--brand-purple, #6B4C9A);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.lead-submit-btn:hover {
+    background: var(--brand-teal, #2A9D8F);
+}
+
 
 /* Book Button in Header */
 .chatbot-book-btn {

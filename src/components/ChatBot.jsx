@@ -1,5 +1,31 @@
 import { useState, useRef, useEffect } from 'react';
-import './ChatBot.css'; // We will create this CSS file
+import './ChatBot.css';
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://pameltex.onrender.com';
+
+// Quick replies to show after service/counselling responses
+const SERVICE_QUICK_REPLIES = ['Book a Session', 'Pricing', 'Contact Us', 'Our Team'];
+const BOOKING_QUICK_REPLIES = ['Individual Therapy', 'Couples Therapy', 'Corporate Services', 'Contact Us'];
+const DEFAULT_QUICK_REPLIES = ['Individual Therapy', 'Couples Therapy', 'Corporate Services', 'Book a Session', 'Pricing'];
+
+function getQuickReplies(category) {
+    switch (category) {
+        case 'individual':
+        case 'couples':
+        case 'corporate':
+        case 'online':
+        case 'confidentiality':
+        case 'languages':
+            return SERVICE_QUICK_REPLIES;
+        case 'booking':
+            return BOOKING_QUICK_REPLIES;
+        case 'greeting':
+        case 'general':
+            return DEFAULT_QUICK_REPLIES;
+        default:
+            return null;
+    }
+}
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -7,7 +33,7 @@ const ChatBot = () => {
         {
             role: 'assistant',
             content: "Hello! Dumela! 👋 I'm Luna, your Pameltex assistant.\n\nHow can I help you today?",
-            quickReplies: ['Individual Therapy', 'Couples Therapy', 'Corporate Services', 'Book a Session', 'Pricing']
+            quickReplies: DEFAULT_QUICK_REPLIES
         }
     ]);
     const [input, setInput] = useState('');
@@ -15,87 +41,87 @@ const ChatBot = () => {
     const [sessionId, setSessionId] = useState(null);
     const [showLeadForm, setShowLeadForm] = useState(false);
     const [leadData, setLeadData] = useState({ name: '', email: '', phone: '' });
+    const [leadSubmitted, setLeadSubmitted] = useState(false);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isOpen]);
+    }, [messages, isOpen, showLeadForm]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!input.trim()) return;
+    // Core send function — accepts message string directly
+    const sendMessage = async (messageText) => {
+        if (!messageText.trim() || isLoading) return;
 
-        const userMessage = input;
-        setInput('');
-        setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+        setMessages(prev => [...prev, { role: 'user', content: messageText }]);
         setIsLoading(true);
 
         try {
-            // Use environment variable or fallback to Render URL
-            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://pameltex.onrender.com';
-
-            const response = await fetch(`${backendUrl}/api/chat`, {
+            const response = await fetch(`${BACKEND_URL}/api/chat`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message: userMessage,
-                    sessionId: sessionId
-                }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: messageText, sessionId }),
             });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network error');
 
             const data = await response.json();
 
-            // Store session ID for conversation continuity
-            if (data.sessionId && !sessionId) {
-                setSessionId(data.sessionId);
-            }
+            if (data.sessionId && !sessionId) setSessionId(data.sessionId);
 
-            setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+            const quickReplies = getQuickReplies(data.category);
 
-            // Show lead form if bot suggests it, or after 2nd message
-            const shouldShow = data.collectLead || data.shouldCollectLead;
-            if (shouldShow && !showLeadForm) {
-                setTimeout(() => {
-                    setShowLeadForm(true);
-                }, 1500);
-            }
-        } catch (error) {
-            console.error('Error:', error);
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content: "I'm having trouble connecting right now. Please try calling us at +267 72 534 203 or email info@pameltex.com"
+                content: data.response,
+                quickReplies
+            }]);
+
+            // Trigger lead form on service/booking inquiries
+            const shouldCollect = data.collectLead || data.shouldCollectLead;
+            if (shouldCollect && !showLeadForm && !leadSubmitted) {
+                setTimeout(() => setShowLeadForm(true), 1500);
+            }
+
+        } catch (error) {
+            console.error('Chat error:', error);
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: "I'm having trouble connecting right now. Please call us at +267 72 534 203 or email info@pameltex.com",
+                quickReplies: null
             }]);
         } finally {
             setIsLoading(false);
         }
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const msg = input.trim();
+        if (!msg) return;
+        setInput('');
+        sendMessage(msg);
+    };
+
+    const handleQuickReply = (reply) => {
+        sendMessage(reply);
+    };
+
     const handleLeadSubmit = async (e) => {
         e.preventDefault();
 
         if (!leadData.name || !leadData.phone || !leadData.email) {
-            alert('Please provide your name, phone number, and email');
+            alert('Please fill in all fields');
             return;
         }
 
         try {
-            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://pameltex.onrender.com';
-
-            const response = await fetch(`${backendUrl}/api/lead`, {
+            const response = await fetch(`${BACKEND_URL}/api/lead`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...leadData,
                     interest: 'Website Chat Inquiry',
@@ -106,24 +132,38 @@ const ChatBot = () => {
             if (response.ok) {
                 setMessages(prev => [...prev, {
                     role: 'assistant',
-                    content: `Thank you, ${leadData.name}! We've received your information and will contact you soon at ${leadData.phone}. 📞`
+                    content: `Thank you, ${leadData.name}! 🙏 We've received your details and will be in touch soon at ${leadData.phone}.\n\nIs there anything else I can help you with?`,
+                    quickReplies: DEFAULT_QUICK_REPLIES
                 }]);
                 setShowLeadForm(false);
+                setLeadSubmitted(true);
                 setLeadData({ name: '', email: '', phone: '' });
+            } else {
+                throw new Error('Submission failed');
             }
         } catch (error) {
-            console.error('Error submitting lead:', error);
-            alert('There was an error. Please call us at +267 72 534 203');
+            console.error('Lead submit error:', error);
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: "There was an issue saving your details. Please call us directly at +267 72 534 203.",
+                quickReplies: null
+            }]);
+            setShowLeadForm(false);
         }
     };
 
+    const renderContent = (content) =>
+        content.split('\n').map((line, i, arr) => (
+            <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+        ));
+
     return (
         <div className={`chatbot-container ${isOpen ? 'open' : ''}`}>
-            {/* Toggle Button (Floating Action Button) */}
+            {/* Floating Toggle Button */}
             <button
                 className="chatbot-toggle"
                 onClick={() => setIsOpen(!isOpen)}
-                aria-label={isOpen ? "Close chat" : "Open chat"}
+                aria-label={isOpen ? 'Close chat' : 'Open chat'}
             >
                 {isOpen ? (
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -139,6 +179,7 @@ const ChatBot = () => {
 
             {/* Chat Window */}
             <div className="chatbot-window">
+                {/* Header */}
                 <div className="chatbot-header">
                     <div className="chatbot-header-info">
                         <h3>Luna</h3>
@@ -154,26 +195,21 @@ const ChatBot = () => {
                     </a>
                 </div>
 
+                {/* Messages */}
                 <div className="chatbot-messages">
                     {messages.map((msg, index) => (
                         <div key={index} className={`message ${msg.role}`}>
                             <div className="message-content">
-                                {msg.content.split('\n').map((line, i) => (
-                                    <span key={i}>{line}{i < msg.content.split('\n').length - 1 && <br />}</span>
-                                ))}
+                                {renderContent(msg.content)}
                             </div>
-                            {msg.quickReplies && (
+                            {msg.quickReplies && msg.quickReplies.length > 0 && (
                                 <div className="quick-replies">
                                     {msg.quickReplies.map((reply, i) => (
                                         <button
                                             key={i}
                                             className="quick-reply-btn"
-                                            onClick={() => {
-                                                setInput(reply);
-                                                setTimeout(() => {
-                                                    document.querySelector('.chatbot-input-area button[type="submit"]')?.click();
-                                                }, 50);
-                                            }}
+                                            onClick={() => handleQuickReply(reply)}
+                                            disabled={isLoading}
                                         >
                                             {reply}
                                         </button>
@@ -182,6 +218,8 @@ const ChatBot = () => {
                             )}
                         </div>
                     ))}
+
+                    {/* Typing indicator */}
                     {isLoading && (
                         <div className="message assistant">
                             <div className="message-content typing-indicator">
@@ -194,17 +232,17 @@ const ChatBot = () => {
                     {showLeadForm && (
                         <div className="message assistant">
                             <div className="message-content lead-form">
-                                <p style={{ marginBottom: '12px', fontWeight: '500' }}>
-                                    📋 May I have your contact information so we can follow up with you?
+                                <p className="lead-form-title">
+                                    📋 Leave your details and we'll get back to you!
                                 </p>
-                                <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <form onSubmit={handleLeadSubmit} className="lead-form-fields">
                                     <input
                                         type="text"
-                                        placeholder="Your Name *"
+                                        placeholder="Full Name *"
                                         value={leadData.name}
                                         onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
                                         required
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                                        className="lead-input"
                                     />
                                     <input
                                         type="tel"
@@ -212,7 +250,7 @@ const ChatBot = () => {
                                         value={leadData.phone}
                                         onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
                                         required
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                                        className="lead-input"
                                     />
                                     <input
                                         type="email"
@@ -220,39 +258,11 @@ const ChatBot = () => {
                                         value={leadData.email}
                                         onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
                                         required
-                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                                        className="lead-input"
                                     />
-                                    <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-                                        <button
-                                            type="submit"
-                                            style={{
-                                                flex: 1,
-                                                padding: '8px',
-                                                background: '#2563eb',
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: '4px',
-                                                cursor: 'pointer',
-                                                fontWeight: '500'
-                                            }}
-                                        >
-                                            Submit
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowLeadForm(false)}
-                                            style={{
-                                                padding: '8px 16px',
-                                                background: '#e5e7eb',
-                                                color: '#374151',
-                                                border: 'none',
-                                                borderRadius: '4px',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            Skip
-                                        </button>
-                                    </div>
+                                    <button type="submit" className="lead-submit-btn">
+                                        Send My Details
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -261,6 +271,7 @@ const ChatBot = () => {
                     <div ref={messagesEndRef} />
                 </div>
 
+                {/* Input */}
                 <form className="chatbot-input-area" onSubmit={handleSubmit}>
                     <input
                         type="text"
