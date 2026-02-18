@@ -11,6 +11,9 @@ const ChatBot = () => {
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [sessionId, setSessionId] = useState(null);
+    const [showLeadForm, setShowLeadForm] = useState(false);
+    const [leadData, setLeadData] = useState({ name: '', email: '', phone: '' });
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -31,15 +34,18 @@ const ChatBot = () => {
         setIsLoading(true);
 
         try {
-            // Determine backend URL (fallback to localhost if env var not set)
-            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+            // Use environment variable or fallback to Render URL
+            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://pameltex-assistant.onrender.com';
 
-            const response = await fetch(`${backendUrl}/api/generate`, {
+            const response = await fetch(`${backendUrl}/api/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ prompt: userMessage }),
+                body: JSON.stringify({
+                    message: userMessage,
+                    sessionId: sessionId
+                }),
             });
 
             if (!response.ok) {
@@ -47,15 +53,65 @@ const ChatBot = () => {
             }
 
             const data = await response.json();
+
+            // Store session ID for conversation continuity
+            if (data.sessionId && !sessionId) {
+                setSessionId(data.sessionId);
+            }
+
             setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+
+            // Show lead form if bot suggests it
+            if (data.shouldCollectLead && !showLeadForm) {
+                setTimeout(() => {
+                    setShowLeadForm(true);
+                }, 2000);
+            }
         } catch (error) {
             console.error('Error:', error);
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content: "I'm having trouble connecting to my server right now. Please try again later."
+                content: "I'm having trouble connecting right now. Please try calling us at +267 72 534 203 or email info@pameltex.com"
             }]);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleLeadSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!leadData.name || !leadData.phone) {
+            alert('Please provide your name and phone number');
+            return;
+        }
+
+        try {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://pameltex-assistant.onrender.com';
+
+            const response = await fetch(`${backendUrl}/api/lead`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...leadData,
+                    interest: 'Website Chat Inquiry',
+                    message: 'Lead collected via chatbot'
+                }),
+            });
+
+            if (response.ok) {
+                setMessages(prev => [...prev, {
+                    role: 'assistant',
+                    content: `Thank you, ${leadData.name}! We've received your information and will contact you soon at ${leadData.phone}. 📞`
+                }]);
+                setShowLeadForm(false);
+                setLeadData({ name: '', email: '', phone: '' });
+            }
+        } catch (error) {
+            console.error('Error submitting lead:', error);
+            alert('There was an error. Please call us at +267 72 534 203');
         }
     };
 
@@ -103,6 +159,74 @@ const ChatBot = () => {
                             </div>
                         </div>
                     )}
+
+                    {/* Lead Collection Form */}
+                    {showLeadForm && (
+                        <div className="message assistant">
+                            <div className="message-content lead-form">
+                                <p style={{ marginBottom: '12px', fontWeight: '500' }}>
+                                    📋 May I have your contact information so we can follow up with you?
+                                </p>
+                                <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    <input
+                                        type="text"
+                                        placeholder="Your Name *"
+                                        value={leadData.name}
+                                        onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
+                                        required
+                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                                    />
+                                    <input
+                                        type="tel"
+                                        placeholder="Phone Number *"
+                                        value={leadData.phone}
+                                        onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
+                                        required
+                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                                    />
+                                    <input
+                                        type="email"
+                                        placeholder="Email (optional)"
+                                        value={leadData.email}
+                                        onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
+                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                                    />
+                                    <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                                        <button
+                                            type="submit"
+                                            style={{
+                                                flex: 1,
+                                                padding: '8px',
+                                                background: '#2563eb',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '4px',
+                                                cursor: 'pointer',
+                                                fontWeight: '500'
+                                            }}
+                                        >
+                                            Submit
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowLeadForm(false)}
+                                            style={{
+                                                padding: '8px 16px',
+                                                background: '#e5e7eb',
+                                                color: '#374151',
+                                                border: 'none',
+                                                borderRadius: '4px',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            Skip
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
                     <div ref={messagesEndRef} />
                 </div>
 

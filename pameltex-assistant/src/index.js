@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { generateContent } = require('./services/gemini');
+const { processMessage } = require('./services/chatbot');
 const { sendLeadNotification, verifyEmailConfig } = require('./services/email');
 const supabase = require('./config/supabase');
 require('dotenv').config();
@@ -49,9 +49,11 @@ app.post('/api/chat', async (req, res) => {
         const history = conversationHistory.get(session);
         history.push({ role: 'user', content: message });
 
-        // Generate AI response
-        const aiResponse = await generateContent(message, history);
-        history.push({ role: 'assistant', content: aiResponse });
+        // Process message with rule-based chatbot
+        const result = processMessage(message);
+        const botResponse = result.response;
+
+        history.push({ role: 'assistant', content: botResponse });
 
         // Keep only last 10 messages to prevent memory issues
         if (history.length > 10) {
@@ -66,7 +68,7 @@ app.post('/api/chat', async (req, res) => {
                     {
                         session_id: session,
                         user_message: message,
-                        bot_response: aiResponse,
+                        bot_response: botResponse,
                         timestamp: new Date().toISOString()
                     }
                 ]);
@@ -76,8 +78,10 @@ app.post('/api/chat', async (req, res) => {
         }
 
         res.json({
-            response: aiResponse,
-            sessionId: session
+            response: botResponse,
+            sessionId: session,
+            category: result.category,
+            shouldCollectLead: result.collectLead
         });
     } catch (error) {
         console.error('Chat error:', error);
