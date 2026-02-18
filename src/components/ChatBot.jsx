@@ -96,6 +96,28 @@ const ChatBot = () => {
 
             if (data.sessionId && !sessionId) setSessionId(data.sessionId);
 
+            // 🎯 Track interest: If user asks about specific services, update lead
+            if (['consultancy', 'corporate', 'child_adolescent', 'individual', 'couples'].includes(data.category)) {
+                const interestMap = {
+                    'consultancy': 'Consultancy Services',
+                    'corporate': 'Corporate Services',
+                    'child_adolescent': 'Child & Adolescent Therapy',
+                    'individual': 'Individual Therapy',
+                    'couples': 'Couples Therapy'
+                };
+
+                // Fire-and-forget update with specific interest
+                fetch(`${BACKEND_URL}/api/lead`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ...leadData,
+                        interest: interestMap[data.category] || data.category,
+                        message: `User asked about ${interestMap[data.category]} during chat.`
+                    }),
+                }).catch(err => console.error('Interest update error:', err));
+            }
+
             setMessages(prev => [...prev, {
                 role: 'assistant',
                 content: data.response,
