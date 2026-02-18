@@ -6,13 +6,15 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://pameltex.onrend
 const SERVICE_QUICK_REPLIES = ['Book a Session', 'Contact Us', 'Our Team'];
 const BOOKING_QUICK_REPLIES = ['Individual Therapy', 'Couples Therapy', 'Corporate Services', 'Contact Us'];
 const DEFAULT_QUICK_REPLIES = ['Individual Therapy', 'Consultancy Services', 'Couples Therapy', 'Book a Session'];
+const CONSULTANCY_QUICK_REPLIES = ['Get a Quote', 'Contact Us'];
 
 function getQuickReplies(category) {
     switch (category) {
-        case 'individual':
-        case 'couples':
         case 'corporate':
         case 'consultancy':
+            return CONSULTANCY_QUICK_REPLIES; // Show 'Get a Quote' instead of 'Book'
+        case 'individual':
+        case 'couples':
         case 'child_adolescent':
         case 'online':
         case 'confidentiality':
@@ -30,14 +32,22 @@ function getQuickReplies(category) {
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [leadCollected, setLeadCollected] = useState(false);
-    const [leadData, setLeadData] = useState({ name: '', email: '', phone: '' });
-    const [leadSubmitting, setLeadSubmitting] = useState(false);
+
+    // Core state
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [sessionId, setSessionId] = useState(null);
     const messagesEndRef = useRef(null);
+
+    // Lead Gate State
+    const [leadCollected, setLeadCollected] = useState(false);
+    const [leadData, setLeadData] = useState({ name: '', email: '', phone: '' });
+
+    // Quote Form State
+    const [showQuoteForm, setShowQuoteForm] = useState(false);
+    const [quoteData, setQuoteData] = useState({ service: 'Consultancy', date: '', attendees: '', company: '' });
+    const [quoteSubmitting, setQuoteSubmitting] = useState(false);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -45,19 +55,16 @@ const ChatBot = () => {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isOpen, leadCollected]);
+    }, [messages, isOpen, leadCollected, showQuoteForm]);
 
-    // Submit lead to backend → Supabase (Fire-and-forget / Optimistic UI)
+    // Submit initial lead to backend (Optimistic)
     const handleLeadSubmit = (e) => {
         e.preventDefault();
-
-        // Basic validation
         if (!leadData.name.trim() || !leadData.phone.trim() || !leadData.email.trim()) {
             alert("Please fill in all fields to continue.");
             return;
         }
 
-        // 🚀 Show chat immediately (Optimistic UI)
         setLeadCollected(true);
         setMessages([{
             role: 'assistant',
@@ -65,7 +72,6 @@ const ChatBot = () => {
             quickReplies: DEFAULT_QUICK_REPLIES
         }]);
 
-        // 🔥 Save to backend in background
         fetch(`${BACKEND_URL}/api/lead`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -77,9 +83,59 @@ const ChatBot = () => {
         }).catch(err => console.error('Background lead save error:', err));
     };
 
+    // Submit Quote Form
+    const handleQuoteSubmit = async (e) => {
+        e.preventDefault();
+        setQuoteSubmitting(true);
+
+        const quoteDetails = `
+Service: ${quoteData.service}
+Date: ${quoteData.date}
+Attendees: ${quoteData.attendees}
+Company: ${quoteData.company}
+        `.trim();
+
+        try {
+            // Send Quote Request
+            await fetch(`${BACKEND_URL}/api/lead`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: leadData.name,
+                    email: leadData.email,
+                    phone: leadData.phone,
+                    interest: 'Corporate Quote Request',
+                    message: quoteDetails
+                }),
+            });
+
+            setShowQuoteForm(false);
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: "✅ Quote request received! We will review your requirements and enable a formal quote shortly.",
+                quickReplies: ['Contact Us', 'Back to Home']
+            }]);
+        } catch (err) {
+            console.error('Quote submit error:', err);
+            setShowQuoteForm(false);
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: "I couldn't send your request right now. Please email us at info@pameltex.com.",
+            }]);
+        } finally {
+            setQuoteSubmitting(false);
+        }
+    };
+
     // Send a chat message
     const sendMessage = async (messageText) => {
         if (!messageText.trim() || isLoading) return;
+
+        // Intercept "Get a Quote"
+        if (messageText === 'Get a Quote') {
+            setShowQuoteForm(true);
+            return;
+        }
 
         setMessages(prev => [...prev, { role: 'user', content: messageText }]);
         setIsLoading(true);
@@ -96,7 +152,7 @@ const ChatBot = () => {
 
             if (data.sessionId && !sessionId) setSessionId(data.sessionId);
 
-            // 🎯 Track interest: If user asks about specific services, update lead
+            // 🎯 Track interest
             if (['consultancy', 'corporate', 'child_adolescent', 'individual', 'couples'].includes(data.category)) {
                 const interestMap = {
                     'consultancy': 'Consultancy Services',
@@ -106,7 +162,6 @@ const ChatBot = () => {
                     'couples': 'Couples Therapy'
                 };
 
-                // Fire-and-forget update with specific interest
                 fetch(`${BACKEND_URL}/api/lead`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -149,9 +204,170 @@ const ChatBot = () => {
             <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
         ));
 
+    // Determine current view: Gate -> QuoteForm -> Chat
+    const renderView = () => {
+        if (!leadCollected) {
+            return (
+                <div className="chatbot-lead-gate">
+                    <div className="lead-gate-intro">
+                        <p className="lead-gate-title">👋 Hello! Dumela!</p>
+                        <p className="lead-gate-sub">
+                            I'm Luna, your Pameltex assistant. Please share your details so we can assist you better.
+                        </p>
+                    </div>
+                    <form onSubmit={handleLeadSubmit} className="lead-gate-form">
+                        <input
+                            type="text"
+                            placeholder="Full Name *"
+                            value={leadData.name}
+                            onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
+                            required
+                            className="lead-input"
+                            autoComplete="name"
+                        />
+                        <input
+                            type="tel"
+                            placeholder="Phone Number *"
+                            value={leadData.phone}
+                            onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
+                            required
+                            className="lead-input"
+                            autoComplete="tel"
+                        />
+                        <input
+                            type="email"
+                            placeholder="Email Address *"
+                            value={leadData.email}
+                            onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
+                            required
+                            className="lead-input"
+                            autoComplete="email"
+                        />
+                        <button type="submit" className="lead-submit-btn">
+                            Start Chat →
+                        </button>
+                    </form>
+                    <p className="lead-gate-privacy">🔒 Your information is kept strictly confidential.</p>
+                </div>
+            );
+        }
+
+        if (showQuoteForm) {
+            return (
+                <div className="chatbot-lead-gate">
+                    <div className="lead-gate-intro">
+                        <p className="lead-gate-title">📋 Request a Quote</p>
+                        <p className="lead-gate-sub">
+                            Please provide details for your consultancy requirements.
+                        </p>
+                    </div>
+                    <form onSubmit={handleQuoteSubmit} className="lead-gate-form">
+                        <select
+                            className="lead-input"
+                            value={quoteData.service}
+                            onChange={(e) => setQuoteData({ ...quoteData, service: e.target.value })}
+                            required
+                        >
+                            <option value="Consultancy">Consultancy</option>
+                            <option value="Training Workshop">Training Workshop</option>
+                            <option value="Policy Development">Policy Development</option>
+                            <option value="Wellness Audit">Wellness Audit</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input
+                            type="text"
+                            placeholder="Company Name"
+                            value={quoteData.company}
+                            onChange={(e) => setQuoteData({ ...quoteData, company: e.target.value })}
+                            required
+                            className="lead-input"
+                        />
+                        <input
+                            type="number"
+                            placeholder="Number of People"
+                            value={quoteData.attendees}
+                            onChange={(e) => setQuoteData({ ...quoteData, attendees: e.target.value })}
+                            className="lead-input"
+                        />
+                        <input
+                            type="date"
+                            placeholder="Preferred Date"
+                            value={quoteData.date}
+                            onChange={(e) => setQuoteData({ ...quoteData, date: e.target.value })}
+                            className="lead-input"
+                        />
+                        <button type="submit" className="lead-submit-btn" disabled={quoteSubmitting}>
+                            {quoteSubmitting ? 'Sending Request...' : 'Submit Request'}
+                        </button>
+                        <button
+                            type="button"
+                            className="chatbot-book-btn"
+                            style={{ marginTop: '10px', width: '100%', textAlign: 'center', background: '#ccc', border: 'none', color: '#333' }}
+                            onClick={() => setShowQuoteForm(false)}
+                        >
+                            Cancel
+                        </button>
+                    </form>
+                </div>
+            );
+        }
+
+        return (
+            <>
+                <div className="chatbot-messages">
+                    {messages.map((msg, index) => (
+                        <div key={index} className={`message ${msg.role}`}>
+                            <div className="message-content">
+                                {renderContent(msg.content)}
+                            </div>
+                            {msg.quickReplies && msg.quickReplies.length > 0 && (
+                                <div className="quick-replies">
+                                    {msg.quickReplies.map((reply, i) => (
+                                        <button
+                                            key={i}
+                                            className="quick-reply-btn"
+                                            onClick={() => sendMessage(reply)}
+                                            disabled={isLoading}
+                                        >
+                                            {reply}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    {isLoading && (
+                        <div className="message assistant">
+                            <div className="message-content typing-indicator">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                </div>
+
+                <form className="chatbot-input-area" onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type a message..."
+                        disabled={isLoading}
+                    />
+                    <button type="submit" disabled={isLoading || !input.trim()}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </form>
+            </>
+        );
+    };
+
     return (
         <div className={`chatbot-container ${isOpen ? 'open' : ''}`}>
-            {/* Floating Toggle Button */}
             <button
                 className="chatbot-toggle"
                 onClick={() => setIsOpen(!isOpen)}
@@ -171,122 +387,21 @@ const ChatBot = () => {
                 )}
             </button>
 
-            {/* Chat Window */}
             <div className="chatbot-window">
-                {/* Header */}
                 <div className="chatbot-header">
                     <div className="chatbot-header-info">
                         <h3>Luna</h3>
                         <span className="chatbot-status">Online · Pameltex</span>
                     </div>
-                    <a href="/booking" className="chatbot-book-btn" target="_blank" rel="noopener noreferrer">
-                        📅 Book
-                    </a>
+                    {/* Header 'Book' button (Hidden on Quote form if desired, or always visible) */}
+                    {!showQuoteForm && (
+                        <a href="/booking" className="chatbot-book-btn" target="_blank" rel="noopener noreferrer">
+                            📅 Book
+                        </a>
+                    )}
                 </div>
 
-                {/* Lead Collection Gate — shown before chat */}
-                {!leadCollected ? (
-                    <div className="chatbot-lead-gate">
-                        <div className="lead-gate-intro">
-                            <p className="lead-gate-title">👋 Hello! Dumela!</p>
-                            <p className="lead-gate-sub">
-                                I'm Luna, your Pameltex assistant. Please share your details so we can assist you better.
-                            </p>
-                        </div>
-                        <form onSubmit={handleLeadSubmit} className="lead-gate-form">
-                            <input
-                                type="text"
-                                placeholder="Full Name *"
-                                value={leadData.name}
-                                onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
-                                required
-                                className="lead-input"
-                                autoComplete="name"
-                            />
-                            <input
-                                type="tel"
-                                placeholder="Phone Number *"
-                                value={leadData.phone}
-                                onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
-                                required
-                                className="lead-input"
-                                autoComplete="tel"
-                            />
-                            <input
-                                type="email"
-                                placeholder="Email Address *"
-                                value={leadData.email}
-                                onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
-                                required
-                                className="lead-input"
-                                autoComplete="email"
-                            />
-                            <button
-                                type="submit"
-                                className="lead-submit-btn"
-                                disabled={leadSubmitting}
-                            >
-                                {leadSubmitting ? 'Processing...' : 'Start Chat →'}
-                            </button>
-                        </form>
-                        <p className="lead-gate-privacy">🔒 Your information is kept strictly confidential.</p>
-                    </div>
-                ) : (
-                    <>
-                        {/* Messages */}
-                        <div className="chatbot-messages">
-                            {messages.map((msg, index) => (
-                                <div key={index} className={`message ${msg.role}`}>
-                                    <div className="message-content">
-                                        {renderContent(msg.content)}
-                                    </div>
-                                    {msg.quickReplies && msg.quickReplies.length > 0 && (
-                                        <div className="quick-replies">
-                                            {msg.quickReplies.map((reply, i) => (
-                                                <button
-                                                    key={i}
-                                                    className="quick-reply-btn"
-                                                    onClick={() => sendMessage(reply)}
-                                                    disabled={isLoading}
-                                                >
-                                                    {reply}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-
-                            {isLoading && (
-                                <div className="message assistant">
-                                    <div className="message-content typing-indicator">
-                                        <span></span><span></span><span></span>
-                                    </div>
-                                </div>
-                            )}
-
-                            <div ref={messagesEndRef} />
-                        </div>
-
-                        {/* Input */}
-                        <form className="chatbot-input-area" onSubmit={handleSubmit}>
-                            <input
-                                type="text"
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                placeholder="Type a message..."
-                                disabled={isLoading}
-                            />
-                            <button type="submit" disabled={isLoading || !input.trim()}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                </svg>
-                            </button>
-                        </form>
-                    </>
-                )}
+                {renderView()}
             </div>
         </div>
     );
