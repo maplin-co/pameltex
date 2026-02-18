@@ -4,9 +4,9 @@ import './ChatBot.css';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://pameltex.onrender.com';
 
 // Quick replies to show after service/counselling responses
-const SERVICE_QUICK_REPLIES = ['Book a Session', 'Pricing', 'Contact Us', 'Our Team'];
+const SERVICE_QUICK_REPLIES = ['Book a Session', 'Contact Us', 'Our Team'];
 const BOOKING_QUICK_REPLIES = ['Individual Therapy', 'Couples Therapy', 'Corporate Services', 'Contact Us'];
-const DEFAULT_QUICK_REPLIES = ['Individual Therapy', 'Couples Therapy', 'Corporate Services', 'Book a Session', 'Pricing'];
+const DEFAULT_QUICK_REPLIES = ['Individual Therapy', 'Couples Therapy', 'Corporate Services', 'Book a Session'];
 
 function getQuickReplies(category) {
     switch (category) {
