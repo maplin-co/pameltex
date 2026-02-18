@@ -70,6 +70,39 @@ We partner with organisations to support employee wellbeing through:
 Customised packages available based on your organisation's size and needs.
 
 Interested in a proposal? Leave your name, number and email and we'll get back to you. 📧`
+        },
+        consultancy: {
+            keywords: ['consultancy', 'consultant', 'workshop', 'training', 'seminar', 'policy', 'program', 'programme', 'development'],
+            response: `**Consultancy & Training Services**
+
+Pameltex offers expert consultancy to help organizations and groups build psychosocial resilience.
+
+**Our Services Include:**
+• **Policy Development:** Mental health & wellness policies for workplaces
+• **Training Workshops:** Stress management, emotional intelligence, mental health aid
+• **Programme Design:** Custom psychosocial support interventions
+• **Research & Assessment:** Organisational wellness audits
+
+We tailor our consultancy to schools, NGOs, corporate bodies, and government institutions.
+
+Would you like to discuss a consultancy project? 🤝`
+        },
+        child_adolescent: {
+            keywords: ['child', 'children', 'kid', 'teen', 'teenager', 'adolescent', 'youth', 'school', 'student'],
+            response: `**Child & Adolescent Counselling**
+
+We provide a safe, supportive space for young people to navigate:
+• School stress & exam anxiety
+• Behavioral challenges
+• Peer pressure & bullying
+• Family changes (divorce, loss)
+• Self-esteem issues
+• Emotional regulation
+
+**Our Team:**
+Our counsellors are experienced in working with children and teens using age-appropriate therapeutic techniques.
+
+Parents are involved in the process where appropriate to ensure holistic support. 👨‍👩‍👧‍👦`
         }
     },
 
@@ -319,8 +352,10 @@ const processMessage = (message) => {
 
 I can help you with information on:
 
-🧠 **Individual Therapy** — anxiety, stress, depression, personal growth
-💑 **Couples Therapy** — relationship and communication support
+🧠 **Individual Therapy** — anxiety, depression, personal growth
+🤝 **Consultancy Services** — workshops, training, policy development
+💑 **Couples Therapy** — relationship support
+🧸 **Child & Adolescent** — support for youth
 🏢 **Corporate Services** — employee wellness programmes
 📋 **Booking** — how to schedule your session
 👥 **Our Team** — meet our qualified counsellors
