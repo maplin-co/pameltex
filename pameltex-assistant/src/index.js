@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { processMessage } = require('./services/chatbot');
+const { generateContent, isGeminiAvailable } = require('./services/gemini');
 const { sendLeadNotification, verifyEmailConfig } = require('./services/email');
 const supabase = require('./config/supabase');
 require('dotenv').config();
@@ -31,7 +32,7 @@ app.get('/health', (req, res) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
-// Chat endpoint with conversation history
+// Chat endpoint with conversation history and Gemini AI
 app.post('/api/chat', async (req, res) => {
     try {
         const { message, sessionId } = req.body;
@@ -47,17 +48,51 @@ app.post('/api/chat', async (req, res) => {
         }
 
         const history = conversationHistory.get(session);
+
+        let botResponse;
+        let category = 'general';
+        let shouldCollectLead = false;
+
+        // --- Check for crisis keywords first (safety priority) ---
+        const lowerMsg = message.toLowerCase();
+        const crisisKeywords = ['suicide', 'kill myself', 'self-harm', 'harm myself', 'end it', 'emergency'];
+        if (crisisKeywords.some(kw => lowerMsg.includes(kw))) {
+            const crisisResult = processMessage(message);
+            botResponse = crisisResult.response;
+            category = 'crisis';
+            shouldCollectLead = false;
+        } else if (isGeminiAvailable()) {
+            // --- Use Gemini AI as the primary responder ---
+            try {
+                // Pass prior conversation turns as history (exclude current message)
+                botResponse = await generateContent(message, history);
+                category = 'ai';
+                // Trigger lead collection if Gemini response suggests interest in services
+                const serviceKeywords = ['book', 'appointment', 'schedule', 'session', 'consultation', 'therapy', 'corporate', 'price', 'cost'];
+                shouldCollectLead = serviceKeywords.some(kw => lowerMsg.includes(kw));
+            } catch (aiError) {
+                console.error('Gemini AI error, falling back to rule-based:', aiError.message);
+                // Fallback to rule-based chatbot
+                const result = processMessage(message);
+                botResponse = result.response;
+                category = result.category;
+                shouldCollectLead = result.collectLead;
+            }
+        } else {
+            // --- Rule-based fallback if no API key ---
+            const result = processMessage(message);
+            botResponse = result.response;
+            category = result.category;
+            shouldCollectLead = result.collectLead;
+        }
+
+        // Update conversation history
         history.push({ role: 'user', content: message });
+        history.push({ role: 'model', content: botResponse });
 
-        // Process message with rule-based chatbot
-        const result = processMessage(message);
-        const botResponse = result.response;
-
-        history.push({ role: 'assistant', content: botResponse });
-
-        // Keep only last 10 messages to prevent memory issues
-        if (history.length > 10) {
-            history.splice(0, history.length - 10);
+        // Keep only last 20 messages (10 turns) to prevent memory issues
+        if (history.length > 20) {
+            history.splice(0, history.length - 20);
         }
 
         // Log to Supabase (optional)
@@ -80,8 +115,8 @@ app.post('/api/chat', async (req, res) => {
         res.json({
             response: botResponse,
             sessionId: session,
-            category: result.category,
-            shouldCollectLead: result.collectLead
+            category: category,
+            shouldCollectLead: shouldCollectLead
         });
     } catch (error) {
         console.error('Chat error:', error);
@@ -172,6 +207,13 @@ app.listen(port, async () => {
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`${'='.repeat(60)}\n`);
 
+    // Log Gemini AI status
+    if (isGeminiAvailable()) {
+        console.log('✅ Gemini AI: ENABLED (gemini-2.5-flash) — Luna is powered by AI');
+    } else {
+        console.log('⚠️  Gemini AI: DISABLED (no API key) — running rule-based mode');
+    }
+
     // Verify email configuration
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
         const emailReady = await verifyEmailConfig();
@@ -183,6 +225,7 @@ app.listen(port, async () => {
     } else {
         console.log('⚠️  Email notifications: DISABLED (no credentials)');
     }
+
 
     console.log('\n📊 Available endpoints:');
     console.log('   GET  /           - Service info');
